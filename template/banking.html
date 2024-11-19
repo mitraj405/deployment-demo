@@ -1,0 +1,223 @@
+{% extends 'base.html'%}
+{% block title %}Persona{% endblock title %}
+{% block style %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #0f0f0f;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+}
+
+
+header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    /* background-color: rgba(45, 48, 241, 0.1); */
+/*  */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 100px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-links li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+main {
+    margin-top: 50px; /* to avoid content overlap with the navbar */
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+
+
+.company {
+    background-color: #7F5AF0;
+    border-radius: 1000px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto; /* Centers the div horizontally */
+}
+
+.company-parent{
+    margin-top: 50px;
+}
+
+
+
+.card {
+    background-color: rgba(255, 255, 255, 0.1);
+    /* padding: 20px; */
+    border-radius: 10px;
+    width: 450px;
+    text-align: center;
+}
+
+.icon {
+    font-size: 30px;
+}
+
+h2 {
+    margin: 20px 0 10px 0;
+}
+
+p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #b5b5b5;
+}
+
+/* Responsive Design for smaller screens */
+@media (max-width: 768px) {
+    .card-container {
+        flex-direction: column;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+.card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    height: 100%;
+}
+
+.card a:hover {
+    background-color: rgba(255, 255, 255, 0.2); /* Highlight effect on hover */
+}
+
+.card a h2 {
+    color: white;
+}
+
+.card a p {
+    color: #b5b5b5;
+}
+
+</style>
+    {% endblock style %}
+
+    {% block nav %}
+    <header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="/static/logo.png" alt="DataTalk.ai logo">
+            <h2>DataTalk.ai</h2>
+        </div>
+    </nav>
+    </header>
+    {% endblock nav %}
+    
+{% block body %}
+<div class="container">
+    <div class = "company-parent">
+        <h3 class="company">What do you do at your Company?</h3>
+    </div>
+        <main>
+            <div class="card-container">
+                <div class="card">
+                    <a href="#" class="card-link">
+                        <h2 class="name" style="color: white;">Branch Manager</h2>
+                        <p>A branch manager oversees the daily operations of a company’s branch, managing staff, ensuring customer satisfaction, meeting financial goals, and implementing strategies to grow the branch's business and profitability.</p>
+                    </a>
+                </div>
+                <div class="card">
+                    <a href="#" class="card-link">
+                        <h2 class="name" style="color: white;">Credit Risk Analyst</h2>
+                        <p>A credit risk analyst evaluates the creditworthiness of clients or investments, analyzing financial data to assess potential risks. They help set credit limits and policies to minimize the company’s risk of loss.</p>
+                    </a>
+                </div>
+                <div class="card">
+                    <a href="#" class="card-link">
+                        <h2 class="name" style="color: white;">Relationship Manager</h2>
+                        <p>A relationship manager builds and maintains strong connections with clients, understanding their needs and providing tailored solutions. They ensure customer satisfaction, foster loyalty, and drive business growth through effective communication.</p>
+                    </a>
+                </div>
+                <div class="card">
+                    <a href="#" class="card-link">
+                        <h2 class="name" style="color: white;">Loan Officer</h2>
+                        <p>A loan officer evaluates and approves loan applications, assessing borrowers' financial information to determine creditworthiness. They guide clients through the loan process, ensuring compliance with regulations and company policies.</p>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock body %}
+{% block js %}
+<script>
+document.querySelectorAll('.card-link').forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent the default anchor behavior
+        const cardName = this.querySelector('.name').innerText; // Get the text from the .name element
+        localStorage.setItem('Persona', cardName); // Store the card name in local storage
+        window.location.href = '/home'; // Redirect to the /home page
+    });
+});
+
+</script>
+{% endblock js %}

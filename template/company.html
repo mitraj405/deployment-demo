@@ -1,0 +1,222 @@
+{% extends 'base.html'%}
+{% block title %}Company{% endblock title %}
+{% block style %}
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #0f0f0f;
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.container {
+    text-align: center;
+    width: 100%;
+}
+
+header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    width: 100px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    color: #FFFFFF;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-links li a:hover {
+    background-color: aquamarine;
+}
+
+main {
+    margin-top: 100px; /* to avoid content overlap with the navbar */
+    perspective: 1000px; /* Creates depth perception for the flip effect */
+}
+
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    
+}
+
+.card {
+    width: 250px;
+    height: 150px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    position: relative;
+}
+
+.card:hover {
+    transform: rotateY(180deg);
+}
+
+.company {
+    background-color: #7F5AF0;
+    border-radius: 1000px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 800px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 auto; /* Centers the div horizontally */
+}
+
+
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    border-radius: 10px;
+    
+}
+
+
+.card-front video {
+    width: 100%;       /* Ensures the video covers the entire width of the card */
+    height: 100%;      /* Ensures the video covers the entire height of the card */
+    object-fit: cover; /* Ensures the video covers the space without distorting aspect ratio */
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.card-front video {
+    width: 70%;       /* Ensures the video covers the entire width of the card */
+    /*height: 70%;*/      /* Ensures the video covers the entire height of the card */
+    /* object-fit: centr; Ensures the video covers the space without distorting aspect ratio */
+    /* position: center; */
+    /* top: 20%;*/
+    left: 17%;
+}
+
+.card-front {
+    background: white; /* Background color for default state */
+}
+
+.card-back {
+    background-color: rgb(82, 79, 79); /* Original front color for flipped state */
+    color: white;
+    border-color: #0f0f0f;
+    transform: rotateY(180deg);
+}
+
+@media (max-width: 768px) {
+    .card-container {
+        flex-direction: column;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+</style>
+{% endblock style %}
+
+{% block nav %}
+<header>
+<nav class="navbar">
+    <div class="logo">
+        <img src="/static/logo.png" alt="DataTalk.ai logo">
+        <h2>DataTalk.ai</h2>
+    </div>
+</nav>
+</header>
+{% endblock nav %}
+
+
+
+
+
+
+{% block body %}
+<div class="container">
+    <div>
+        <h3 class="company">Choose your Company Type</h3>
+    </div>
+    <main>
+        <div class="card-container">
+            {% for type in types %}
+            <div class="card" data-url="{{ type.url }}">
+                <div class="card-front">
+                    <video autoplay loop muted playsinline>
+                        {% if forloop.counter == 1 %}
+                        <source src="https://cdn-icons-mp4.flaticon.com/512/16162/16162050.mp4" type="video/mp4">
+                        {% elif forloop.counter == 2 %}
+                        <source src="https://cdn-icons-mp4.flaticon.com/512/17556/17556489.mp4" type="video/mp4">
+                        {% elif forloop.counter == 3 %}
+                        <source src="https://cdn-icons-mp4.flaticon.com/512/15401/15401492.mp4" type="video/mp4">
+                        {% endif %}
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="card-back">
+                    <h2>{{ type.name }}</h2>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+
+<script>
+    // JavaScript to add click functionality
+    document.querySelectorAll('.card').forEach(card => {
+        card.addEventListener('click', () => {
+            // Redirect to the URL specified in the data-url attribute
+            window.location.href = card.getAttribute('data-url');
+        });
+    });
+</script>
+{% endblock body %}f

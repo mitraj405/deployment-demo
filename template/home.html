@@ -1,0 +1,537 @@
+{% extends 'base.html'%}
+{% block title %}Chat{% endblock title %}
+{% block style %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body {
+        background-color: #111111;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .container {
+        text-align: center;
+        width: 100%;
+        margin-top: 60px;
+        height: 80vh;
+    }
+
+    header {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px 0;
+        font-size: 0.9rem; /* Reduce header font size */
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .logo img {
+        width: 80px; /* Reduce logo size */
+    }
+
+    .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+    }
+
+    .nav-links li a {
+        color: #FFFFFF;
+        text-decoration: none;
+        padding: 5px 15px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .nav-links li a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    main {
+        margin-top: 80px;
+        /* margin:-3px; */
+    }
+
+    
+
+    .card-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 30px;
+    }
+
+    @media (max-width: 768px) {
+        .card-container {
+            display: grid;
+        }
+    }
+
+    .card {
+        border-color: rgba(255, 255, 255, 0.1);
+        background-color: #0f0f0f;
+        padding: 5px;
+        border-radius: 50px;
+        text-align: center;
+        transition: background-color 0.3s ease;
+        font-size: 0.5rem; /* Reduce card text size */
+        padding-left : 20px;
+        padding-right: 20px;
+    }
+
+    .card:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .card a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .chat-box {
+        margin: 15px auto;
+        position: fixed;
+        bottom: 15px;
+        width: 85vw;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+    }
+
+    .chat-box input {
+        width: 90%;
+        padding: 8px;
+        border: none;
+        border-radius: 20px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: white;
+        font-size: 0.9rem;
+        outline: none;
+    }
+
+    .chat-box button {
+        background-color: #4A5568;
+        border: none;
+        padding: 8px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        margin-left: 10px;
+        transition: background-color 0.3s ease;
+    }
+
+    .chat-box button:hover {
+        background-color: #718096;
+    }
+
+    @media (max-width: 768px) {
+        .card-container {
+            grid-template-columns: 1fr;
+        }
+
+        .nav-links {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+
+    .chat-messages {
+        height: 65vh;
+        width: 85vw;
+        overflow-y: auto;
+        background-color: #2D3748;
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .message {
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 10px;
+        word-wrap: break-word;
+        display: flex;
+        align-items: center;
+        max-width: 70%;
+    }
+
+    .user-message {
+        color: white;
+        text-align: end;
+        margin-left: auto;
+        max-width: 70%;
+    }
+
+    .company{
+        margin-top:60px;
+    }
+
+    .bot-message {
+        color: white;
+        align-self: flex-start;
+        margin-right: auto;
+        max-width: 70%;
+        
+    }
+
+    .waviy {
+        position: relative;
+        font-size: 0.8rem; /* Reduce typing animation size */
+    }
+</style>
+{% endblock style %}
+
+<!-- Other blocks remain the same -->
+
+
+{% block nav %}
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="C:\Users\Hp\OneDrive\Desktop\deployment-master\static\logo.png" alt="DataTalk.ai logo">
+            <h2>DataTalk.ai</h2>
+        </div>
+    </nav>
+</header>
+{% endblock nav %}
+
+{% block body %}
+<div class="container" id="container">
+    <div class="company">
+        <h1>How can I help you?</h1>
+    </div>
+    <main>
+        <div class="card-container">
+            <div class="card" onclick="getCardText(this)">
+                <a href="/home" class="card-link">
+                    <h5 style="color: rgb(190, 179, 179); margin: 0.5rem;">Plot monthwise rask</h5>
+                    <p></p>
+                </a>
+            </div>
+            <div class="card" onclick="getCardText(this)">
+                <a href="/home" class="card-link">
+                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">Show monthwise RASK in table</h5>
+                    <p></p>
+                </a>
+            </div>
+            <div class="card" onclick="getCardText(this)">
+                <a href="/home" class="card-link">
+                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">Average Sale?</h5>
+                    <p></p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Second row with 2 columns -->
+        <div class="card-container">
+            <div class="card">
+                <a href="/home" class="card-link" onclick="getCardText(this)">
+                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">Compare RASK with previous year</h5>
+                    <p href="/home" style="color: white;"></p>
+                    <p href="/home" style="color: white;"></p>
+                </a>
+            </div>
+            <div class="card" onclick="getCardText(this)">
+                <a href="#" class="card-link">
+                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">What is RASK?</h5>
+                    <p></p>
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+<div id="chat-messages" class="chat-messages">
+
+</div>
+
+<form class="chat-box" id="chat-form">
+    <input type="text" id="chat-input" placeholder="Type a query..." />
+    <button type="submit">Send</button>
+</form>
+
+{% endblock body %}
+
+{% block js %}
+<script>
+    document.getElementById('chat-form').addEventListener('submit', handleChatSubmit);
+
+    document.getElementById('chat-messages').style.display = 'none';
+    function disableInput() {
+        document.getElementById('chat-input').disabled = true;
+    }
+
+    function enableInput() {
+        document.getElementById('chat-input').disabled = false;
+    }
+    function handleChatSubmit(event) {
+        disableInput();
+        event.preventDefault();
+        document.getElementById('chat-messages').style.display = 'block';
+
+        const input = document.getElementById('chat-input');
+        const message = input.value;
+        document.getElementById('container').style.display = 'none';
+
+
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatMessages.innerHTML += `<div class='user-message'>${message}</div>`;
+        chatMessages.innerHTML += `<div class='bot-message waviy'  id='loading'>
+            <span style="--i:1">T</span>
+            <span style="--i:2">h</span>
+            <span style="--i:3">i</span>
+            <span style="--i:4">n</span>
+            <span style="--i:5">k</span>
+            <span style="--i:6">i</span>
+            <span style="--i:7">n</span>
+            <span style="--i:8">g</span>
+            </div>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight
+        input.value = '';
+
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}' // Use Django's CSRF token
+            },
+            body: JSON.stringify({ message: message })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response) {
+                    document.getElementById('loading').remove();
+                    enableInput()
+                    if (data.message_type == 'text') {
+                        chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`; // Add bot response
+                    } else if (data.message_type == 'chart') {
+                        renderChart(data.response)
+                    }
+                    else if (data.message_type == 'query') {
+                        // const response = JSON.parse(data.response);
+                        const dataframe = convertResponseToArray(data.response);
+                        console.log(dataframe);
+                        renderDataFrame(dataframe);
+                    }
+                    chatMessages.scrollTop = chatMessages.scrollHeight
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+    function convertResponseToArray(data) {
+
+        data = JSON.parse(data)
+        const keys = Object.keys(data);
+
+
+        const rowCount = Object.keys(data[keys[0]]).length;
+
+
+        const dataArray = [];
+
+
+        for (let i = 0; i < rowCount; i++) {
+            const row = {};
+            keys.forEach(key => {
+                row[key] = data[key][i];
+            });
+            dataArray.push(row);
+        }
+
+        return dataArray
+    }
+    function renderDataFrame(dataframe) {
+        const table = document.createElement('table');
+        table.className = 'bot-message'
+        table.style.width = '100%';
+        table.style.borderCollapse = 'collapse';
+
+        // Create table header
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+
+
+        const columns = new Set();
+        dataframe.forEach(row => {
+            Object.keys(row).forEach(key => {
+                columns.add(key);
+            });
+        });
+
+        columns.forEach(column => {
+            const th = document.createElement('th');
+            th.innerText = column;
+            th.style.border = '1px solid #888888';
+            th.style.padding = '8px';
+            th.style.backgroundColor = '#1F2937';
+            th.style.color = '#FFFFFF';
+            headerRow.appendChild(th);
+        });
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create table body
+        const tbody = document.createElement('tbody');
+        dataframe.forEach(row => {
+            const tr = document.createElement('tr');
+            columns.forEach(column => {
+                const td = document.createElement('td');
+                td.innerText = row[column] !== undefined ? row[column] : '';
+                td.style.border = '1px solid #888888';
+                td.style.padding = '8px';
+                td.style.color = '#FFFFFF';
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+        table.appendChild(tbody);
+
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.appendChild(table);
+    }
+
+    function renderChart(chartData) {
+        if (typeof chartData === 'string') {
+            chartData = JSON.parse(chartData);
+        }
+
+        let layout = chartData.layout || {};
+        const newData = chartData.data || [];
+
+
+        layout.paper_bgcolor = '#1F2937';
+        layout.plot_bgcolor = '#FFFFFF';
+        layout.font = { color: '#FFFFFF' };
+        layout.xaxis = {
+            ...layout.xaxis,
+            color: '#FFFFFF',
+            gridcolor: '#CCCCCC',
+            linecolor: '#888888',
+        };
+        layout.yaxis = {
+            ...layout.yaxis,
+            color: '#FFFFFF',
+            gridcolor: '#CCCCCC',
+            linecolor: '#888888',
+        };
+
+        newData.forEach((trace, index) => {
+            // Example color palette
+            const colors = ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFDB33'];
+            trace.marker = trace.marker || {};
+            trace.marker.color = colors[index % colors.length];
+        });
+
+        const chatMessages = document.getElementById('chat-messages');
+
+
+        const chartContainer = document.createElement('div');
+        chartContainer.className = 'bot-message chat';
+        chartContainer.style.width = '100%';
+        chartContainer.style.height = '400px';
+        chatMessages.appendChild(chartContainer);
+
+        Plotly.newPlot(chartContainer, newData, layout);
+    }
+
+
+    function getCardText(card) {
+        const title = card.querySelector('h5').innerText;
+        const description = card.querySelector('p').innerText;
+        event.preventDefault();
+
+        const cardText = `${title}`;
+        document.getElementById('chat-messages').style.display = 'block';
+        const message = cardText;
+        console.log(message)
+        document.getElementById('container').style.display = 'none';
+
+
+        const chatMessages = document.getElementById('chat-messages');
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        chatMessages.innerHTML += `<div class='user-message'>${message}</div>`;
+        chatMessages.innerHTML += `<div class='bot-message waviy'  id='loading'>
+            <span style="--i:1">T</span>
+            <span style="--i:2">h</span>
+            <span style="--i:3">i</span>
+            <span style="--i:4">n</span>
+            <span style="--i:5">k</span>
+            <span style="--i:6">i</span>
+            <span style="--i:7">n</span>
+            <span style="--i:8">g</span>
+            </div>`;
+        // input.value = ''; 
+        chatMessages.scrollTop = chatMessages.scrollHeight
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}' // Use Django's CSRF token
+            },
+            body: JSON.stringify({ message: message })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.response) {
+                    document.getElementById('loading').remove();
+                    if (data.message_type == 'text') {
+                        chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`;
+                    } else if (data.message_type == 'chart') {
+                        renderChart(data.response)
+                    }
+                    else if (data.message_type == 'query') {
+                        const dataframe = convertResponseToArray(data.response);
+                        console.log(dataframe);
+                        renderDataFrame(dataframe);
+                    }
+                    chatMessages.scrollTop = chatMessages.scrollHeight
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        console.log(cardText);
+    }
+</script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"> </script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock js %}
