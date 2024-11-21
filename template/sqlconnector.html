@@ -174,9 +174,9 @@
                 if (result.status === "success") {
                     responseDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
                     // Redirect to the home page after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = "{% url 'home' %}";
-                    }, 2000);
+                    // setTimeout(() => {
+                    //     window.location.href = "{% url 'home' %}";
+                    // }, 2000);
                 } else {
                     responseDiv.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
                 }

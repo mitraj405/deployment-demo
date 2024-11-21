@@ -2,7 +2,7 @@ import mysql.connector
 from mysql.connector import Error
 
 def connect_to_database(host_name, user_name, user_password, db_name):
-    print("-------------------------------------")
+    print("-------------------------------------------")
     """
     Establish a connection to the MySQL database.
 
