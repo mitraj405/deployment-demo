@@ -13,6 +13,8 @@ urlpatterns = [
     path('finance', views.fianance , name='fianance'),
     path('banking', views.banking , name='banking'),
     path('ecommerse', views.ecommerse , name='ecommerse'),
+    path('sqlconnector', views.sqlconnector , name='sqlconnector'),
+    path("connect-to-database/", views.connect_to_database, name="connect_to_database"),    
     path('home', views.home , name='home'),
     path('chat', views.chat_view , name='chat'),
 ]

@@ -7,11 +7,16 @@ import json
 from chatbot_v2 import send_message
 from django.shortcuts import redirect
 import plotly.io as pio
+from updated_sqlconnector import connect_to_database
+import mysql.connector
+from mysql.connector import Error
 
 # Create your views here.
 def index(request):
     return render(request,"index.html")
 from django.shortcuts import render
+import mysql.connector
+from mysql.connector import Error
 
 
 def company(request):
@@ -33,6 +38,44 @@ def banking(request):
 
 def ecommerse(request):
     return render(request,"ecommerse.html")
+
+
+def sqlconnector(request):
+    # Render the SQL Connector form
+    return render(request, "sqlconnector.html")
+
+@csrf_exempt  # Disable CSRF for simplicity; remove this in production and use CSRF tokens
+def connect_to_database(request):
+    if request.method == 'POST':
+        # Parse JSON data from the POST request
+        data = json.loads(request.body)
+        host_name = data.get('hostname')
+        user_name = data.get('username')
+        user_password = data.get('password')
+        db_name = data.get('dbname')
+
+        try:
+            # Check for missing fields
+            if not host_name or not user_name or not user_password or not db_name:
+                return JsonResponse({"status": "error", "message": "All fields are required!"}, status=400)
+
+            # Attempt to connect to the database
+            connection = mysql.connector.connect(
+                host=host_name,
+                user=user_name,
+                passwd=user_password,
+                database=db_name
+            )
+
+            # If connection is successful
+            if connection.is_connected():
+                connection.close()
+                return JsonResponse({"status": "success", "message": "Database connection successful!"})
+
+        except Error as e:
+            return JsonResponse({"status": "error", "message": f"Database connection failed: {str(e)}"}, status=500)
+
+    return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
 
 def home(request):
     return render(request,"home.html")

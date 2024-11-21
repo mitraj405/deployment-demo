@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Database Connection{% endblock %}
+
+{% block style %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Arial', sans-serif;
+    }
+
+    body {
+        background-color: #111111;
+        color: #FFFFFF;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        position: relative;
+    }
+
+    .container {
+        text-align: center;
+        width: 100%;
+        margin-top: 80px;
+        height: 80vh;
+    }
+
+    header {
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 20px 0;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .logo img {
+        width: 100px;
+    }
+
+    .form-input {
+        width: 60%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 20px;
+        background-color: #2D3748;
+        color: white;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .form-input::placeholder {
+        color: #b5b5b5;
+    }
+
+    button {
+        background-color: #4A5568;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        transition: background-color 0.3s ease;
+        font-size: 14px;
+    }
+
+    button:hover {
+        background-color: #718096;
+    }
+
+    .alert {
+        margin: 20px auto;
+        width: 60%;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-success {
+        background-color: #38A169;
+        color: white;
+    }
+
+    .alert-error {
+        background-color: #E53E3E;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block nav %}
+<header>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="./../static/logo.png" alt="DataTalk.ai logo">
+            <h2>DataTalk.ai</h2>
+        </div>
+    </nav>
+</header>
+{% endblock %}
+
+{% block body %}
+<div class="container" id="container">
+    <div>
+        <h1>Database Connection Details</h1>
+    </div>
+    <main>
+        <form id="db-form" class="card-container" style="flex-direction: column; align-items: center; justify-content: center;margin:auto;padding-top: 30px;width:500px; background-color: #bcc7e9; border-radius: 15px;">
+
+            <div id="submit-div" style = "padding-top: 20px">
+                <input type="text" id="hostname" placeholder="Enter hostname" required class="form-input">
+            </div>
+            <input type="text" id="username" placeholder="Enter username" required class="form-input">
+            <input type="password" id="password" placeholder="Enter password" required class="form-input">
+            <input type="text" id="dbname" placeholder="Enter database name" required class="form-input">
+            <div id="submit-div" style = "padding-bottom: 20px">
+                <button type="submit">Connect</button>
+            </div>
+        </form>
+        <div id="response-message"></div>
+    </main>
+</div>
+{% endblock %}
+
+{% block js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('db-form');
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            // Fetch input values
+            const hostname = document.getElementById('hostname').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const dbname = document.getElementById('dbname').value;
+
+            try {
+                // Send data to the backend
+                const response = await fetch("{% url 'connect_to_database' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: JSON.stringify({ hostname, username, password, dbname })
+                });
+
+                const result = await response.json();
+
+                // Handle the response
+                const responseDiv = document.getElementById("response-message");
+                responseDiv.innerHTML = ""; // Clear any existing messages
+
+                if (result.status === "success") {
+                    responseDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+                    // Redirect to the home page after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = "{% url 'home' %}";
+                    }, 2000);
+                } else {
+                    responseDiv.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
+                }
+            } catch (error) {
+                console.error("Error connecting to the database:", error);
+                document.getElementById("response-message").innerHTML =
+                    `<div class="alert alert-error">An unexpected error occurred.</div>`;
+            }
+        });
+    });
+</script>
+{% endblock %}

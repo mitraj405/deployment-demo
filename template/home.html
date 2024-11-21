@@ -267,6 +267,57 @@
         position: relative;
         font-size: 0.8rem; /* Reduce typing animation size */
     }
+
+
+    .back-button {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+    gap: 10px;
+}
+
+.back-button a {
+    color: #FFFFFF;
+    font-size: 16px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-button a:hover {
+    color: #CCCCCC;
+}
+
+.back-button svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* SQL Connector Button */
+#sql-connector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 15px;
+    background-color: #4A5568;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#sql-connector img {
+    width: 24px;
+    height: 24px;
+}
+
+#sql-connector:hover {
+    background-color: #718096;
+}
+
+
 </style>
 {% endblock style %}
 
@@ -276,12 +327,35 @@
 {% block nav %}
 <header>
     <nav class="navbar">
-        <div class="logo">
-            <img src="C:\Users\Hp\OneDrive\Desktop\deployment-master\static\logo.png" alt="DataTalk.ai logo">
-            <h2>DataTalk.ai</h2>
+        <!-- Left: Back Button and Logo -->
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <!-- Back Button -->
+            <a id="back-button" href="#" style="display: flex; align-items: center; text-decoration: none; color: #FFFFFF;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span style="margin-left: 8px;">Back</span>
+            </a>
+
+            <!-- Logo -->
+            <div class="logo" style="display: flex; align-items: center; gap: 5px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Sql_run_gear.svg" alt="DataTalk.ai logo" style="width: 80px;">
+                <h2 style="margin: 0; font-size: 20px;">DataTalk.ai</h2>
+            </div>
+        </div>
+
+        <!-- Right: SQL Connector Button -->
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <button id="sql-connector" onclick="redirectToSQLConnector()" style="display: flex; align-items: center; gap: 8px; padding: 8px 15px; background-color: #4A5568; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2772/2772128.png" alt="SQL Icon" style="width: 24px; height: 24px;">
+                <span>SQL Connector</span>
+            </button>
         </div>
     </nav>
 </header>
+
+
 {% endblock nav %}
 
 {% block body %}
@@ -344,6 +418,33 @@
 
 {% block js %}
 <script>
+    function redirectToSQLConnector() {
+        window.location.href = "/sqlconnector"; // Redirect to the SQL Connector page
+    }
+
+    // Back button logic
+    const backButton = document.getElementById('back-button');
+
+    function handleBackButton() {
+        const isChatVisible = document.getElementById('chat-messages').style.display === 'block';
+        const containerVisible = document.getElementById('container').style.display === 'block';
+
+        if (isChatVisible && !containerVisible) {
+            // On chat interface, go back to the question prompt (first subpage)
+            document.getElementById('chat-messages').style.display = 'none';
+            document.getElementById('container').style.display = 'block';
+        } else {
+            // Default browser back behavior
+            history.back();
+        }
+    }
+
+    backButton.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent default anchor behavior
+        handleBackButton();
+    });
+
+
     document.getElementById('chat-form').addEventListener('submit', handleChatSubmit);
      // document.querySelector('.batman').disabled = true;
 //      document.getElementById('batman').disabled = true;
