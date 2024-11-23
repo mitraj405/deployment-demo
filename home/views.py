@@ -111,7 +111,7 @@ import json
 from chatbot_v2 import send_message
 from django.shortcuts import redirect
 import plotly.io as pio
-from updated_sqlconnector import connect_to_database
+from updated_sqlconnector import connect_to_databaseup
 import mysql.connector
 from mysql.connector import Error
 
@@ -150,71 +150,35 @@ def sqlconnector(request):
 @csrf_exempt
 def connect_to_database(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        host_name = data.get('hostname')
-        user_name = data.get('username')
-        user_password = data.get('password')
-        db_name = data.get('dbname')  # Assumes database name is sent by the client
-
-        try:
-            connection = mysql.connector.connect(
-                host=host_name,
-                user=user_name,
-                passwd=user_password
-            )
-
-            if connection.is_connected():
-                cursor = connection.cursor()
-
-                if db_name:
-                    cursor.execute(f"USE {db_name}")
-                    print(f"Connected to database: {db_name}")
-
-                    cursor.execute("SHOW TABLES")
-                    tables = cursor.fetchall()
-                    print("\nTables and their Schema:")
-                    for (table_name,) in tables:
-                        print(f"\nTable: {table_name}")
-                        cursor.execute(f"DESCRIBE {table_name}")
-                        columns = cursor.fetchall()
-                        print(f"{'Column':<20} {'Type':<20} {'Null':<10} {'Key':<10} {'Default':<10} {'Extra':<10}")
-                        for col in columns:
-                            formatted_values = [
-                                col[0] or 'None',
-                                col[1] or 'None',
-                                col[2] or 'None',
-                                col[3] or 'None',
-                                col[4] if col[4] is not None else 'None',
-                                col[5] or 'None'
-                            ]
-                            print("{:<20} {:<20} {:<10} {:<10} {:<10} {:<10}".format(*formatted_values))
-                else:
-                    cursor.execute("SHOW DATABASES")
-                    databases = cursor.fetchall()
-                    print("Available Databases:")
-                    for db in databases:
-                        print(f"- {db[0]}")
-
-                connection.close()
-
-        except Error as e:
-            print(f"Database connection failed: {str(e)}")
-            return JsonResponse({"status": "error", "message": f"Database connection failed: {str(e)}"}, status=500)
-
-        return HttpResponse("Check your console for details.")
-
+        return connect_to_databaseup(request)
     return JsonResponse({"status": "error", "message": "Invalid request method."}, status=405)
 
-
 def home(request):
-    return render(request,"home.html")
+    chat_open = request.GET.get('chat', '') == 'open'
+    thread_id = request.GET.get('thread_id', None)
+    context = {
+        'chat_open': chat_open,
+        'thread_id': thread_id
+    }
+    return render(request, 'home.html', context)
+
 
 def chat_view(request):
     if request.method == 'POST':
         data = json.loads(request.body)  # Parse the JSON body
         user_message = data.get('message', '')
+        thread_id = data.get('threadId')  # Extract the thread_id from the request data
+
+        chat_param = data.get('chatType') 
+        print(chat_param,"---------------------------------")
+        if(chat_param != "open"):
+            thread_id = None
+        print(request)
+        print("---------------------------------")
+        print(request.get_full_path())
+        print(request.build_absolute_uri())
         print("USER", user_message)
-        message_type, usage_data, response = send_message(user_message)
+        message_type, usage_data, response = send_message(user_message,thread_id)
         if message_type == 'chart':
             response = pio.to_json(response)
         if message_type == 'query':

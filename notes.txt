@@ -1,0 +1,3 @@
+if we send the query ,and suppose rely is not query or error, in ystnax, we hae to send next api uery ,that this is not working, take your time and solve like this, and alos we will write in second that, syntax should be correct and only mysql query
+first we have to send thread id to home page, for further communication
+also showw in ui that we are connected constantlyE
