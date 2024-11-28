@@ -500,8 +500,9 @@ window.onload = function() {
             document.getElementById('container').style.display = 'none';
 
             const chatMessages = document.getElementById('chat-messages');
-            const threadId = localStorage.getItem('threadId'); // Get the thread ID if stored
-            const assistantId= localStorage.getItem('assistantId'); // Get the ass ID if stored
+            const threadId = urlParams.get('thread_id'); // Get 'thread_id' from URL
+            const assistantId = urlParams.get('assistant_id'); // Get 'assistant_id' from URL
+
             console.log("submit pressed",assistantId,threadId);
             // alert("second");
             // Clear input and prepare to send message
