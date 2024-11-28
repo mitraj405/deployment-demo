@@ -14,7 +14,8 @@ from selenium.common.exceptions import TimeoutException
 import sqlitecloud
 import time
 import inspect
-
+import mysql.connector
+from mysql.connector import Error
 
 def create_chart(title: str, x_label: str, y_label: str, secondary_y_label: str = None):
     """Creates a new chart. You can only call create_chart once, at the start of a query.
@@ -194,15 +195,35 @@ def table(sql_query: str, column_names: str):
                 .replace('"', "")
                 .replace("\\", "")
             )
+    # db_credentials = request.session['db_credentials']
+
     sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
-    sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
-    cursor = sqliteConnection.cursor()
+    connection = mysql.connector.connect(
+        host="sql7.freemysqlhosting.net",
+        user="sql7748185",
+        password="bbtqvgiWqw",
+        database="sql7748185"
+    )
+    cursor = connection.cursor()
+    query = sql_query
+    query = "SELECT * FROM cart LIMIT 5;"
+    cursor.execute(query)
+    result = cursor.fetchall()
 
-    cursor.execute(sql_query)
-    record = pd.DataFrame(cursor.fetchall(), columns=column_names)
+
+    # sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
+    # cursor = sqliteConnection.cursor
+    # cursor.execute(sql_query)
+    print(result)
+
+    record = pd.DataFrame(result, columns=column_names)
+
     cursor.close()
-    sqliteConnection.close()
+    connection.close()
 
+    # cursor.close()
+    # sqliteConnection.close()
+    print(record)
     return record
 
 

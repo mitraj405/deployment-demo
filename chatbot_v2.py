@@ -12,7 +12,8 @@ from openai import OpenAI
 import streamlit as st
 import json, os
 import traceback
-
+import mysql.connector
+from mysql.connector import Error
 
 def send_message(message,thread_from_previous_page=None,assistant_from_previous_page=None):
         
@@ -63,6 +64,23 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
         thread.id = thread_from_previous_page
         assistant.id = assistant_from_previous_page
     try:
+        # Check if there are any active runs
+        active_runs = client.beta.threads.runs.list(thread_id=thread.id)
+        active_run = [run for run in active_runs.data if run.status != "completed"]
+
+        if active_run:
+            # Only cancel if the run is expired or still active
+            if active_run[0].status == "active" or (active_run[0].status != "expired"  and active_run[0].status != "cancelled"):
+                print(f"Active run {active_run[0].id} detected. Cancelling the active run...")
+                client.beta.threads.runs.cancel(thread_id=thread.id, run_id=active_run[0].id)
+                print(f"Active run {active_run[0].id} has been cancelled.")
+                
+                # Optionally, wait a few seconds to ensure the run has been cancelled
+                time.sleep(2)
+            else:
+                print(f"Run {active_run[0].id} is not in an active or expired state, skipping cancellation.")
+        else:
+            print("No active runs found.")
         message = client.beta.threads.messages.create(
             thread_id=thread.id,
             role="user",

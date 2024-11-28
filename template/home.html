@@ -526,8 +526,18 @@ window.onload = function() {
             .then(data => {
                 // After receiving the response, display the bot's message
                 if (data.response) {
-                    chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`;
-                    chatMessages.scrollTop = chatMessages.scrollHeight; // Scroll to the bottom
+                    if (data.message_type == 'text') {
+                        chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`; // Add bot response
+                    } else if (data.message_type == 'chart') {
+                        renderChart(data.response)
+                    }
+                    else if (data.message_type == 'query') {
+                        // const response = JSON.parse(data.response);
+                        const dataframe = convertResponseToArray(data.response);
+                        console.log(dataframe);
+                        renderDataFrame(dataframe);
+                    }
+                    chatMessages.scrollTop = chatMessages.scrollHeight                
                 }
                 input.disabled = false;
                 document.getElementById('batman').disabled = false; // Re-enable the send button

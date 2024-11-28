@@ -9,3 +9,11 @@ sql7748185
 sql7.freemysqlhosting.net
 
 bbtqvgiWqw
+
+
+----------------
+
+
+currently we have to make sure we are able to execute queries
+forget aobut showing reslult, we are gettting the queries, that will work
+and not anything, but also about questions it ask
