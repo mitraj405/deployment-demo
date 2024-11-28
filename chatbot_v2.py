@@ -14,50 +14,49 @@ import json, os
 import traceback
 
 
-MODEL="gpt-4o"
-os.environ['OPENAI_API_KEY']='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'
-client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-assistant = client.beta.assistants.create(
-  name="Data Analyst for Air India",
-  instructions=open("./utils/system-instructions.txt", "r").read(),
-  tools=get_tools([
-      year_over_year,
-      table,
-      query,
-      create_chart,
-      show_chart,
-      bar,
-      line,
-      histogram,
-      live_fare_data,
-  ]),
-  model=MODEL,
-)
-ass_ID=assistant.id
-st.set_page_config(layout="wide")
-
-@st.cache_resource
-def load_model():
-    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
-    assistant = client.beta.assistants.retrieve(ass_ID)
-    thread = client.beta.threads.create()
-
-    return client, assistant, thread
-
-
-@st.cache_resource
-def load_tokens():
-    tokens = 0
-    return tokens
-
-client, assistant, thread = load_model()
-figure = make_subplots(specs=[[{"secondary_y": True}]])
-traces = list()
-secondary_ys = list()
-task_list = list()
-request_tokens = 0
-
 def send_message(message,thread_from_previous_page=None,assistant_from_previous_page=None):
+        
+    MODEL="gpt-4o"
+    os.environ['OPENAI_API_KEY']='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'
+    client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+    assistant = client.beta.assistants.create(
+    name="Data Analyst for Air India",
+    instructions=open("./utils/system-instructions.txt", "r").read(),
+    tools=get_tools([
+        year_over_year,
+        table,
+        query,
+        create_chart,
+        show_chart,
+        bar,
+        line,
+        histogram,
+        live_fare_data,
+    ]),
+    model=MODEL,
+    )
+    ass_ID=assistant.id
+    st.set_page_config(layout="wide")
+
+    def load_model():
+        client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
+        assistant = client.beta.assistants.retrieve(ass_ID)
+        thread = client.beta.threads.create()
+
+        return client, assistant, thread
+
+
+    def load_tokens():
+        tokens = 0
+        return tokens
+
+    client, assistant, thread = load_model()
+    figure = make_subplots(specs=[[{"secondary_y": True}]])
+    traces = list()
+    secondary_ys = list()
+    task_list = list()
+    request_tokens = 0
+
     print(f"\n\033[1mUSER:\033[0m\n{message}\033[1m\n\nSYSTEM:\033[0m")
     usage_data = None
     if thread_from_previous_page != None :
@@ -89,7 +88,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                         output_str = "Chart created."
                         task_list.append("Creating chart...")
 
-                        global figure, traces
+                        # global figure, traces
                         figure, traces = create_chart(
                             title=args["title"],
                             x_label=args["x_label"],
