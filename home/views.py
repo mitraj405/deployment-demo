@@ -156,9 +156,12 @@ def connect_to_database(request):
 def home(request):
     chat_open = request.GET.get('chat', '') == 'open'
     thread_id = request.GET.get('thread_id', None)
+    assistant_id = request.GET.get('assistant_id', None)
+
     context = {
         'chat_open': chat_open,
-        'thread_id': thread_id
+        'thread_id': thread_id,
+        'assistant_id' : assistant_id
     }
     return render(request, 'home.html', context)
 
@@ -168,7 +171,8 @@ def chat_view(request):
         data = json.loads(request.body)  # Parse the JSON body
         user_message = data.get('message', '')
         thread_id = data.get('threadId')  # Extract the thread_id from the request data
-
+        assistant_id = data.get('assistantId')
+        # assistant_id = "asst_0fd4TWApDFlzZnyGp6t7Ifyk"
         chat_param = data.get('chatType') 
         print(chat_param,"---------------------------------")
         if(chat_param != "open"):
@@ -178,7 +182,7 @@ def chat_view(request):
         print(request.get_full_path())
         print(request.build_absolute_uri())
         print("USER", user_message)
-        message_type, usage_data, response = send_message(user_message,thread_id)
+        message_type, usage_data, response = send_message(user_message,thread_id,assistant_id)
         if message_type == 'chart':
             response = pio.to_json(response)
         if message_type == 'query':

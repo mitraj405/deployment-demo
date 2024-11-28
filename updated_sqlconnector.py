@@ -248,6 +248,7 @@ import mysql.connector
 from mysql.connector import Error
 import json
 from django.http import JsonResponse
+from utils.functions import *
 
 import json
 from django.http import JsonResponse
@@ -265,7 +266,6 @@ def connect_to_databaseup(request):
     """
     # Define the API key and assistant ID inside the function
     api_key = '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'
-    assistant_id = 'asst_BrW23X4ut3WDml88YAveEPP2'  # Replace with your actual assistant ID
 
     # if request.method == 'POST':
     #     try:
@@ -406,13 +406,34 @@ def connect_to_databaseup(request):
                     cursor.close()
 
 
+                # client = OpenAI(api_key=api_key)
+                # if thread_id is None:
+                #     # Create a new thread if no thread ID is provided
+                #     thread = client.beta.threads.create()
+                #     thread_id = thread.id
+                file_content = open('./database_details.txt', 'r').read()
                 client = OpenAI(api_key=api_key)
-                if thread_id is None:
-                    # Create a new thread if no thread ID is provided
-                    thread = client.beta.threads.create()
-                    thread_id = thread.id
+                thread = client.beta.threads.create()
+                thread_id = thread.id
 
-                file_content = open('database_details.txt', 'r').read()
+                assistant = client.beta.assistants.create( 
+                        name="Assistant for data talk for data driven queries",
+                        instructions=open("./database_details.txt", "r").read(),
+                        tools=get_tools([
+                            year_over_year,
+                            table,
+                            query,
+                            create_chart,
+                            show_chart,
+                            bar,
+                            histogram,
+                            live_fare_data,
+                        ]),
+                        model="gpt-4o"
+                ,
+                    )
+                assistant_id = assistant.id
+
                 print(file_content)
                 content = data.get('message', file_content)  # Default first message if not provided
                 client.beta.threads.messages.create(
@@ -442,12 +463,13 @@ def connect_to_databaseup(request):
                     msg.content[0].text.value for msg in messages if msg.content and isinstance(msg.content[0], dict) and 'text' in msg.content[0]
                 ]
 
-                print(messages[0].content[0].text.value)
+                # print(messages[0].content[0].text.value)
+                # print("thread value is ",thread_id, assistant_id)
                 # window.location.href = "/home?chat=open"
-                url = reverse('home') + f'?chat=open&thread_id={thread_id}'
+                url = reverse('home') + f'?chat=open&thread_id={thread_id}&assistant_id={assistant_id}'
 
                 
-                return redirect(f'/home?chat=open&thread_id={thread_id}')
+                return redirect(f'/home?chat=open&thread_id={thread_id}&assistant_id={assistant_id}')
 
                 # return JsonResponse({
                 #     "status": "success",
@@ -482,7 +504,7 @@ def sql_executor(request,query):
             query = "SELECT COUNT(*) FROM cart;"
             cursor.execute(query)
             result = cursor.fetchall()
-            print
+            # print
             cursor.close()
             connection.close()
 

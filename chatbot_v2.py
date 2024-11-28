@@ -57,13 +57,12 @@ secondary_ys = list()
 task_list = list()
 request_tokens = 0
 
-def send_message(message,thread_from_previous_page=None):
-    
+def send_message(message,thread_from_previous_page=None,assistant_from_previous_page=None):
     print(f"\n\033[1mUSER:\033[0m\n{message}\033[1m\n\nSYSTEM:\033[0m")
     usage_data = None
     if thread_from_previous_page != None :
         thread.id = thread_from_previous_page
-
+        assistant.id = assistant_from_previous_page
     try:
         message = client.beta.threads.messages.create(
             thread_id=thread.id,
