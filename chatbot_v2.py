@@ -272,7 +272,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                         output_str = "List the following flights:\n" + "\n".join(result)
                     elif tool.function.name == "table":
                         print(
-                            f"table(sql_query={args['sql_query']}, column_names={args['column_names']})"
+                            f"table(sql_query={args['sql_query']}, column_names={args['column_names']},thread_from_previous_page)"
                         )
                         output_str = "Table created."
                         task_list.append("Creating table...")
@@ -282,14 +282,17 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             table(
                                 sql_query=args["sql_query"],
                                 column_names=args["column_names"],
+                                thread_from_previous_page = thread_from_previous_page
                             ),
+                           
                         )
                     elif tool.function.name == "query":
                         task_list.append("Querying database...")
-                        print(f"query(sql_query={args['sql_query']})")
+                        print(f"query(sql_query={args['sql_query']},thread_from_previous_page)")
 
                         result = query(
-                            sql_query=args["sql_query"],
+                            thread_from_previous_page= thread_from_previous_page,
+                            sql_query=args["sql_query"]
                         )
 
                         task_list.append("Analyzing data...")

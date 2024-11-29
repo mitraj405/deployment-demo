@@ -158,7 +158,7 @@ def year_over_year(
     return [cy_trace, py_trace]
 
 
-def table(sql_query: str, column_names: str):
+def table(sql_query: str, column_names: str, thread_from_previous_page : str):
     """Queries the database and displays the output to the user in tabular form.
 
     Args:
@@ -196,37 +196,48 @@ def table(sql_query: str, column_names: str):
                 .replace("\\", "")
             )
     # db_credentials = request.session['db_credentials']
+    if thread_from_previous_page != None :
+        sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        connection = mysql.connector.connect(
+            host="sql7.freemysqlhosting.net",
+            user="sql7748185",
+            password="bbtqvgiWqw",
+            database="sql7748185"
+        )
+        cursor = connection.cursor()
+        query = sql_query
+        # query = "WITH top_cart AS ( SELECT * FROM cart ) SELECT * FROM top_cart LIMIT 5;"
+        cursor.execute(query)
+        result = cursor.fetchall()
 
-    sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
-    connection = mysql.connector.connect(
-        host="sql7.freemysqlhosting.net",
-        user="sql7748185",
-        password="bbtqvgiWqw",
-        database="sql7748185"
-    )
-    cursor = connection.cursor()
-    query = sql_query
-    # query = "WITH top_cart AS ( SELECT * FROM cart ) SELECT * FROM top_cart LIMIT 5;"
-    cursor.execute(query)
-    result = cursor.fetchall()
+        # sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
+        # cursor = sqliteConnection.cursor
+        # cursor.execute(sql_query)
+        print(result)
 
-    # sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
-    # cursor = sqliteConnection.cursor
-    # cursor.execute(sql_query)
-    print(result)
+        record = pd.DataFrame(result, columns=column_names)
 
-    record = pd.DataFrame(result, columns=column_names)
+        cursor.close()
+        connection.close()
 
-    cursor.close()
-    connection.close()
-
-    # cursor.close()
-    # sqliteConnection.close()
-    print(record)
-    return record
+        # cursor.close()
+        # sqliteConnection.close()
+        print(record)
+        return record
+    else:
+        sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
+        cursor = sqliteConnection.cursor()
+        cursor.execute(sql_query)
+        record = pd.DataFrame(cursor.fetchall(), columns=column_names)
+        cursor.close()
+        sqliteConnection.close()
+        return record
 
 
-def query(sql_query: str):
+
+
+def query(thread_from_previous_page :str,sql_query: str):
     """Queries the database and will provide you with access to database records. Which you can use to respond to the user in natural language.
 
     If the user doesn't ask you to analyze the data, just use the table function to display it.
@@ -239,16 +250,44 @@ def query(sql_query: str):
 
     print(sql_query)
 
-    sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
-    sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
-    cursor = sqliteConnection.cursor()
+    if thread_from_previous_page != None :
+            
+        sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        connection = mysql.connector.connect(
+            host="sql7.freemysqlhosting.net",
+            user="sql7748185",
+            password="bbtqvgiWqw",
+            database="sql7748185"
+        )
+        cursor = connection.cursor()
+        query = sql_query
+        # query = "WITH top_cart AS ( SELECT * FROM cart ) SELECT * FROM top_cart LIMIT 5;"
+        cursor.execute(query)
+        result = cursor.fetchall()
 
-    cursor.execute(sql_query)
-    record = pd.DataFrame(cursor.fetchall())
-    cursor.close()
-    sqliteConnection.close()
+        # sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
+        # cursor = sqliteConnection.cursor
+        # cursor.execute(sql_query)
+        print(result)
 
-    return record
+        record = pd.DataFrame(result)
+
+        cursor.close()
+        connection.close()
+
+        # cursor.close()
+        # sqliteConnection.close()
+        print(record)
+        return record
+    else:
+        sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
+        cursor = sqliteConnection.cursor()
+        cursor.execute(sql_query)
+        record = pd.DataFrame(cursor.fetchall())
+        cursor.close()
+        sqliteConnection.close()
+        return record
 
 
 def bar(sql_query: str, x_dim: int, y_dim: int, name: str, secondary_y: bool):
