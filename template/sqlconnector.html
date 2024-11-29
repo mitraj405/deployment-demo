@@ -164,20 +164,25 @@
                     },
                     body: JSON.stringify({ hostname, username, password, dbname })
                 });
-
                 const result = await response.json();
+                console.log("metro",result);
 
                 // Handle the response
                 const responseDiv = document.getElementById("response-message");
                 responseDiv.innerHTML = ""; // Clear any existing messages
 
                 if (result.status === "success") {
+                alert("success");
+                
+                
                     responseDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
                     // Redirect to the home page after 2 seconds
                     // setTimeout(() => {
                     //     window.location.href = "{% url 'home' %}";
+                    window.location.href = result.url
                     // }, 2000);
                 } else {
+                    alert("error")
                     responseDiv.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
                 }
             } catch (error) {

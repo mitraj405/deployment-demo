@@ -244,6 +244,7 @@
 #             )
 
 #     return JsonResponse({"status": "error", "message": "Invalid request method. Only POST is allowed."}, status=405)
+from curses import window
 import mysql.connector
 from mysql.connector import Error
 import json
@@ -470,16 +471,17 @@ def connect_to_databaseup(request):
                 # print("thread value is ",thread_id, assistant_id)
                 # window.location.href = "/home?chat=open"
                 url = reverse('home') + f'?chat=open&thread_id={thread_id}&assistant_id={assistant_id}'
-
+                # window.location.href = url
                 
-                return redirect(f'/home?chat=open&thread_id={thread_id}&assistant_id={assistant_id}')
+                # return redirect(f'/home?chat=open&thread_id={thread_id}&assistant_id={assistant_id}')
 
-                # return JsonResponse({
-                #     "status": "success",
-                #     "message": f"Connected to database {db_name}.",
-                #     "assistant_messages": assistant_responses,
-                #     "thread_id": thread_id  # Return the thread ID to the client for subsequent requests
-                # })
+                return JsonResponse({
+                    "status": "success",
+                    "message": f"Connected to database {db_name}.",
+                    "assistant_messages": assistant_responses,
+                    "thread_id": thread_id,  # Return the thread ID to the client for subsequent requests
+                    "url" : url
+                })
 
         except Error as e:
             return JsonResponse({"status": "error", "message": f"Database connection failed: {str(e)}"}, status=500)
