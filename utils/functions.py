@@ -206,10 +206,9 @@ def table(sql_query: str, column_names: str):
     )
     cursor = connection.cursor()
     query = sql_query
-    query = "SELECT * FROM cart LIMIT 5;"
+    # query = "WITH top_cart AS ( SELECT * FROM cart ) SELECT * FROM top_cart LIMIT 5;"
     cursor.execute(query)
     result = cursor.fetchall()
-
 
     # sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
     # cursor = sqliteConnection.cursor
