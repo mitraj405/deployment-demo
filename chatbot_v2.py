@@ -288,11 +288,12 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                         )
                     elif tool.function.name == "query":
                         task_list.append("Querying database...")
-                        print(f"query(sql_query={args['sql_query']},thread_from_previous_page)")
+                        print(f"query(sql_query={args['sql_query']})")
 
                         result = query(
-                            thread_from_previous_page= thread_from_previous_page,
-                            sql_query=args["sql_query"]
+                            
+                            sql_query=args["sql_query"],
+                            thread_from_previous_page= thread_from_previous_page
                         )
 
                         task_list.append("Analyzing data...")

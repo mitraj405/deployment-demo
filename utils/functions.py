@@ -158,7 +158,7 @@ def year_over_year(
     return [cy_trace, py_trace]
 
 
-def table(sql_query: str, column_names: str, thread_from_previous_page : str):
+def table(sql_query: str, column_names: str, thread_from_previous_page : str = None):
     """Queries the database and displays the output to the user in tabular form.
 
     Args:
@@ -237,7 +237,7 @@ def table(sql_query: str, column_names: str, thread_from_previous_page : str):
 
 
 
-def query(thread_from_previous_page :str,sql_query: str):
+def query(sql_query: str,thread_from_previous_page :str=None):
     """Queries the database and will provide you with access to database records. Which you can use to respond to the user in natural language.
 
     If the user doesn't ask you to analyze the data, just use the table function to display it.
