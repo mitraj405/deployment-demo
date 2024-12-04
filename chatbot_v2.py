@@ -70,8 +70,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
 
         if active_run:
             # Only cancel if the run is expired or still active
-            if active_run[0].status == "active" or (active_run[0].status != "expired"  and active_run[0].status != "cancelled"):
-                print(f"Active run {active_run[0].id} detected. Cancelling the active run...")
+            if active_run[0].status == "active" or active_run[0].status not in ["expired", "failed", "cancelled"]:
                 client.beta.threads.runs.cancel(thread_id=thread.id, run_id=active_run[0].id)
                 print(f"Active run {active_run[0].id} has been cancelled.")
                 
