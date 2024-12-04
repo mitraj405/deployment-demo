@@ -2,15 +2,17 @@
 {% block title %}Chat{% endblock title %}
 {% block style %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap&family=Ubuntu&display=swap');
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
     }
-
+    
     body {
-        background-color: #111111;
+        font-family: 'Poppins', sans-serif;
+        background-color: #000;
         color: #FFFFFF;
         display: flex;
         justify-content: center;
@@ -32,28 +34,29 @@
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: #0A0E1A;
         padding: 10px 0;
-        font-size: 0.9rem; /* Reduce header font size */
     }
 
     .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 14px 20px;
+        
     }
 
     .logo {
         display: flex;
         align-items: center;
         gap: 5px;
+        font-family: 'Ubuntu', sans-serif;
     }
 
     .logo img {
-        width: 80px; /* Reduce logo size */
+        width: 100px;
+        /* Reduce logo size */
     }
 
     .nav-links {
@@ -79,7 +82,7 @@
         /* margin:-3px; */
     }
 
-    
+
 
     .card-container {
         display: flex;
@@ -97,13 +100,14 @@
     .card {
         border-color: rgba(255, 255, 255, 0.1);
         background-color: #0f0f0f;
-        padding: 5px;
         border-radius: 50px;
         text-align: center;
-        transition: background-color 0.3s ease;
-        font-size: 0.5rem; /* Reduce card text size */
-        padding-left : 20px;
+        font-size: 0.5rem;
+        /* Reduce card text size */
+        padding-top: 10px;
+        padding-left: 20px;
         padding-right: 20px;
+        transition: background-color 0.3s ease;
     }
 
     .card:hover {
@@ -132,9 +136,9 @@
 
     .chat-box input {
         width: 90%;
-        padding: 8px;
+        padding: 10px 15px;
         border: none;
-        border-radius: 20px;
+        border-radius: 10px;
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
         font-size: 0.9rem;
@@ -144,7 +148,7 @@
     .chat-box button {
         background-color: #4A5568;
         border: none;
-        padding: 8px;
+        padding: 10px 15px;
         border-radius: 5px;
         cursor: pointer;
         color: white;
@@ -153,7 +157,8 @@
     }
 
     .chat-box button:hover {
-        background-color: #718096;
+        background-color: #3d4450;
+        transform: scale(1.05);
     }
 
     @media (max-width: 768px) {
@@ -192,132 +197,177 @@
         align-items: center;
         max-width: 70%;
     }
-/* For Chat Messages Container */
-.chat-messages {
-    height: 65vh;
-    width: 85vw;
-    overflow-y: auto;
-    background-color: #1A202C; /* Darker background for chat area */
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Add spacing between messages */
-}
 
-/* For User Messages (Align Right) */
-.user-message {
-    color: white;
-    background-color: #2C7A7B; /* User message background color */
-    align-self: flex-end; /* Align user messages to the right */
-    padding: 10px 15px;
-    border-radius: 15px 15px 0px 15px; /* Rounded corners */
-    max-width: 70%; /* Set a maximum width */
-    width: fit-content; /* Make the width dynamic based on content */
-    word-wrap: break-word; /* Wrap long words to prevent overflow */
-    text-align: left; /* Text alignment inside the box */
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: auto; /* Ensure it is pushed to the right */
-}
+    /* For Chat Messages Container */
+    .chat-messages {
+        height: 65vh;
+        width: 85vw;
+        overflow-y: auto;
+        background-color: #1A202C;
+        /* Darker background for chat area */
+        padding: 10px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        scroll-behavior: smooth;
+        /* Add spacing between messages */
+    }
 
-/* For Bot Messages (Align Left) */
-.bot-message {
-    color: white;
-    background-color: #4A5568; /* Bot message background color */
-    align-self: flex-start; /* Align bot messages to the left */
-    padding: 10px 15px;
-    border-radius: 15px 15px 15px 0px; /* Rounded corners */
-    max-width: 70%; /* Set a maximum width */
-    width: fit-content; /* Make the width dynamic based on content */
-    word-wrap: break-word; /* Wrap long words to prevent overflow */
-    text-align: left; /* Text alignment inside the box */
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: auto; /* Ensure it is pushed to the left */
-}
+    .chat-messages::-webkit-scrollbar {
+        width: 10px;
+    }
 
+    .chat-messages::-webkit-scrollbar-thumb {
+        background-color: #4A5568;
+        border-radius: 10px;
+    }
 
+    .chat-messages::-webkit-scrollbar-track {
+        background-color: #0A0E1A;
+    }
 
-/* For Bot Messages */
+    /* For User Messages (Align Right) */
+    .user-message {
+        color: white;
+        background-color: #2C7A7B;
+        /* User message background color */
+        align-self: flex-end;
+        /* Align user messages to the right */
+        padding: 10px 15px;
+        border-radius: 15px 15px 0px 15px;
+        /* Rounded corners */
+        max-width: 70%;
+        /* Set a maximum width */
+        width: fit-content;
+        /* Make the width dynamic based on content */
+        word-wrap: break-word;
+        /* Wrap long words to prevent overflow */
+        text-align: left;
+        /* Text alignment inside the box */
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        /* Ensure it is pushed to the right */
+    }
 
-
-    .company{
-        margin-top:60px;
+    /* For Bot Messages (Align Left) */
+    .bot-message {
+        color: white;
+        background-color: #4A5568;
+        /* Bot message background color */
+        align-self: flex-start;
+        /* Align bot messages to the left */
+        padding: 10px 15px;
+        border-radius: 15px 15px 15px 0px;
+        /* Rounded corners */
+        max-width: 70%;
+        /* Set a maximum width */
+        width: fit-content;
+        /* Make the width dynamic based on content */
+        word-wrap: break-word;
+        /* Wrap long words to prevent overflow */
+        text-align: left;
+        /* Text alignment inside the box */
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: auto;
+        /* Ensure it is pushed to the left */
     }
 
 
-/* Add some animation to bot messages */
-.bot-message.waviy span {
-    display: inline-block;
-    animation: waviy 1s infinite;
-}
 
-@keyframes waviy {
-    0%, 100% {
-        transform: translateY(0);
+    /* For Bot Messages */
+
+
+    .company {
+        margin-top: 60px;
     }
-    50% {
-        transform: translateY(-10px);
+    
+    /* Add some animation to bot messages */
+    .bot-message.waviy span {
+        display: inline-block;
+        animation: waviy 1s infinite;
     }
-}
+
+    @keyframes waviy {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
 
     .waviy {
         position: relative;
-        font-size: 0.8rem; /* Reduce typing animation size */
+        font-size: 0.8rem;
+        /* Reduce typing animation size */
     }
 
 
     .back-button {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-    gap: 10px;
-}
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        gap: 10px;
+    }
 
-.back-button a {
-    color: #FFFFFF;
-    font-size: 16px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+    .back-button a {
+        color: #FFFFFF;
+        font-size: 16px;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
 
-.back-button a:hover {
-    color: #CCCCCC;
-}
+    .back-button a:hover {
+        color: #CCCCCC;
+    }
 
-.back-button svg {
-    width: 24px;
-    height: 24px;
-}
+    .back-button svg {
+        width: 24px;
+        height: 24px;
+    }
 
-/* SQL Connector Button */
-#sql-connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 15px;
-    background-color: #4A5568;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
+    /* SQL Connector Button */
+    #sql-connector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background-color: #4A5568;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
 
-#sql-connector img {
-    width: 24px;
-    height: 24px;
-}
+    #sql-connector img {
+        width: 24px;
+        height: 24px;
+    }
 
-#sql-connector:hover {
-    background-color: #718096;
-}
+    #sql-connector:hover {
+        background-color: #718096;
+    }
 
+    #back-button {
+        background: black;
+        border-radius: 50px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
 
+    #back-button:hover {
+        background: #282828;
+    }
 </style>
 {% endblock style %}
 
@@ -330,8 +380,10 @@
         <!-- Left: Back Button and Logo -->
         <div style="display: flex; align-items: center; gap: 15px;">
             <!-- Back Button -->
-            <a id="back-button" href="#" style="display: flex; align-items: center; text-decoration: none; color: #FFFFFF;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a id="back-button" href="#"
+                style="display: flex; align-items: center; text-decoration: none; color: #FFFFFF;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
@@ -340,15 +392,17 @@
 
             <!-- Logo -->
             <div class="logo" style="display: flex; align-items: center; gap: 5px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Sql_run_gear.svg" alt="DataTalk.ai logo" style="width: 80px;">
+                <img src="/static/logo.png" alt="DataTalk.ai logo" style="width: 80px;">
                 <h2 style="margin: 0; font-size: 20px;">DataTalk.ai</h2>
             </div>
         </div>
 
         <!-- Right: SQL Connector Button -->
         <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="sql-connector" onclick="redirectToSQLConnector()" style="display: flex; align-items: center; gap: 8px; padding: 8px 15px; background-color: #4A5568; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
-                <img src="https://cdn-icons-png.flaticon.com/512/2772/2772128.png" alt="SQL Icon" style="width: 24px; height: 24px;">
+            <button id="sql-connector" onclick="redirectToSQLConnector()"
+                style="display: flex; align-items: center; gap: 8px; padding: 8px 15px; background-color: #4A5568; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2772/2772128.png" alt="SQL Icon"
+                    style="width: 24px; height: 24px;">
                 <span>SQL Connector</span>
             </button>
         </div>
@@ -417,28 +471,29 @@
 {% endblock body %}
 
 {% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
 
 
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    // const urlParams = new URLSearchParams(window.location.search);
-    const threadId = urlParams.get('thread_id');
-    const assistantId = urlParams.get('assistant_id');
-    console.log(threadId,assistantId,"hello from home page");
-    if (threadId) {
-        localStorage.setItem('threadId', threadId);  // Store thread ID in localStorage
-        localStorage.setItem('assistantId', assistantId);  // Store ass ID in localStorage
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        // const urlParams = new URLSearchParams(window.location.search);
+        const threadId = urlParams.get('thread_id');
+        const assistantId = urlParams.get('assistant_id');
+        console.log(threadId, assistantId, "hello from home page");
+        if (threadId) {
+            localStorage.setItem('threadId', threadId);  // Store thread ID in localStorage
+            localStorage.setItem('assistantId', assistantId);  // Store ass ID in localStorage
 
-    }
-    const chatOpen = urlParams.get('chat');
-    console.log(chatOpen);
-    if (chatOpen === 'open') {
-        document.getElementById('chat-messages').style.display = 'block';
-        document.getElementById('container').style.display ='none   ';    
-        document.getElementById('main-content').style.display = 'none';  // Assuming 'main-content' is the ID for the main page area
-    }
-};
+        }
+        const chatOpen = urlParams.get('chat');
+        console.log(chatOpen);
+        if (chatOpen === 'open') {
+            document.getElementById('chat-messages').style.display = 'block';
+            document.getElementById('container').style.display = 'none   ';
+            document.getElementById('main-content').style.display = 'none';  // Assuming 'main-content' is the ID for the main page area
+        }
+    };
 
 
     function redirectToSQLConnector() {
@@ -469,10 +524,10 @@ window.onload = function() {
 
 
     document.getElementById('chat-form').addEventListener('submit', handleChatSubmit);
-     // document.querySelector('.batman').disabled = true;
-//      document.getElementById('batman').disabled = true;
+    // document.querySelector('.batman').disabled = true;
+    //      document.getElementById('batman').disabled = true;
 
-// document.getElementById('chat-input').disabled = true;
+    // document.getElementById('chat-input').disabled = true;
     document.getElementById('chat-messages').style.display = 'none';
     function disableInput() {
         // document.querySelector('.batman').disabled = true;
@@ -503,52 +558,52 @@ window.onload = function() {
             const threadId = urlParams.get('thread_id'); // Get 'thread_id' from URL
             const assistantId = urlParams.get('assistant_id'); // Get 'assistant_id' from URL
 
-            console.log("submit pressed",assistantId,threadId);
+            console.log("submit pressed", assistantId, threadId);
             // alert("second");
             // Clear input and prepare to send message
-            
+
             input.value = '';
             input.disabled = true;
             document.getElementById('batman').disabled = true; // Disable the send button temporarily
 
             // Simulate sending message
             chatMessages.innerHTML += `<div class='user-message'>${message}</div>`;
-            console.log("hi",threadId,assistantId);
+            console.log("hi", threadId, assistantId);
             fetch('/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
-                body: JSON.stringify({ message: message, threadId: threadId,assistantId:assistantId ,chatType:chatType })
+                body: JSON.stringify({ message: message, threadId: threadId, assistantId: assistantId, chatType: chatType })
             })
-            .then(response => response.json())
-            .then(data => {
-                // After receiving the response, display the bot's message
-                if (data.response) {
-                    if (data.message_type == 'text') {
-                        chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`; // Add bot response
-                    } else if (data.message_type == 'chart') {
-                        renderChart(data.response)
+                .then(response => response.json())
+                .then(data => {
+                    // After receiving the response, display the bot's message
+                    if (data.response) {
+                        if (data.message_type == 'text') {
+                            chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`; // Add bot response
+                        } else if (data.message_type == 'chart') {
+                            renderChart(data.response)
+                        }
+                        else if (data.message_type == 'query') {
+                            // const response = JSON.parse(data.response);
+                            const dataframe = convertResponseToArray(data.response);
+                            console.log(dataframe);
+                            renderDataFrame(dataframe);
+                        }
+                        chatMessages.scrollTop = chatMessages.scrollHeight
                     }
-                    else if (data.message_type == 'query') {
-                        // const response = JSON.parse(data.response);
-                        const dataframe = convertResponseToArray(data.response);
-                        console.log(dataframe);
-                        renderDataFrame(dataframe);
-                    }
-                    chatMessages.scrollTop = chatMessages.scrollHeight                
-                }
-                input.disabled = false;
-                document.getElementById('batman').disabled = false; // Re-enable the send button
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                input.disabled = false;
-                document.getElementById('batman').disabled = false;
-            });
+                    input.disabled = false;
+                    document.getElementById('batman').disabled = false; // Re-enable the send button
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    input.disabled = false;
+                    document.getElementById('batman').disabled = false;
+                });
         }
-    }    
+    }
     function convertResponseToArray(data) {
 
         data = JSON.parse(data)

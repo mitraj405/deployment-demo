@@ -4,15 +4,17 @@
 
 {% block style %}
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap&family=Ubuntu&display=swap');
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
+        font-family: 'Poppins', sans-serif;
     }
 
     body {
-        background-color: #111111;
+        background-color: #000;
         color: #FFFFFF;
         display: flex;
         justify-content: center;
@@ -27,6 +29,7 @@
         width: 100%;
         margin-top: 80px;
         height: 80vh;
+        padding-top: 20px;
     }
 
     header {
@@ -34,17 +37,17 @@
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(255, 255, 255, 0.1);
-        padding: 20px 0;
+        background-color: #0A0E1A;
+        padding: 10px 0;
     }
 
     .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1200px;
+        /* max-width: 1200px; */
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 10px 20px;
     }
 
     .logo {
@@ -57,14 +60,19 @@
         width: 100px;
     }
 
+    .logo h2 {
+        font-family: 'Ubuntu', sans-serif;
+        padding-top: 10px;
+    }
+
     .form-input {
-        width: 60%;
-        padding: 10px;
+        width: 80%;
+        padding: 20px;
         margin-bottom: 20px;
         border: none;
-        border-radius: 20px;
-        background-color: #2D3748;
-        color: white;
+        border-radius: 10px;
+        background-color: #ffffff;
+        color: #000000;
         font-size: 14px;
         outline: none;
     }
@@ -104,6 +112,30 @@
         background-color: #E53E3E;
         color: white;
     }
+
+    .loader {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ffffff;
+        border-bottom-color: transparent;
+        border-radius: 50%;
+        display: inline-block;
+        animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    button:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+    }
 </style>
 {% endblock %}
 
@@ -111,7 +143,7 @@
 <header>
     <nav class="navbar">
         <div class="logo">
-            <img src="./../static/logo.png" alt="DataTalk.ai logo">
+            <img src="/static/logo.png" alt="DataTalk.ai logo">
             <h2>DataTalk.ai</h2>
         </div>
     </nav>
@@ -124,7 +156,7 @@
         <h1>Database Connection Details</h1>
     </div>
     <main>
-        <form id="db-form" class="card-container" style="flex-direction: column; align-items: center; justify-content: center;margin:auto;padding-top: 30px;width:500px; background-color: #bcc7e9; border-radius: 15px;">
+        <form id="db-form" class="card-container" style="flex-direction: column; align-items: center; justify-content: center;margin:auto;padding-top: 30px;width:500px; background-color: royalblue; border-radius: 15px;">
 
             <div id="submit-div" style = "padding-top: 20px">
                 <input type="text" id="hostname" placeholder="Enter hostname" required class="form-input">
@@ -133,7 +165,10 @@
             <input type="password" id="password" placeholder="Enter password" required class="form-input">
             <input type="text" id="dbname" placeholder="Enter database name" required class="form-input">
             <div id="submit-div" style = "padding-bottom: 20px">
-                <button type="submit">Connect</button>
+                <button type="submit" id="submit-button">
+                    <span class="button-text">Connect</span>
+                    <div class="loader" style="display: none;"></div>
+                </button>
             </div>
         </form>
         <div id="response-message"></div>
@@ -142,11 +177,148 @@
 {% endblock %}
 
 {% block js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
+    // Toast component implementation
+    const createContainer = () => {
+        let container = document.getElementById('toast-container');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toast-container';
+            container.style.position = 'fixed';
+            container.style.top = '1rem';
+            container.style.right = '1rem';
+            container.style.zIndex = '9999';
+            document.body.appendChild(container);
+        }
+        return container;
+    };
+
+    const toastTypes = {
+        success: {
+            icon: `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/>
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M352 176L217.6 336 160 272"/>
+            </svg>`,
+            backgroundColor: '#f0fdf4',
+            gradient: 'linear-gradient(145deg, #dcfce7, #86efac)',
+            borderColor: '#86efac',
+            textColor: '#166534',
+            iconBackground: '#22c55e'
+        },
+        error: {
+            icon: `<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192 192-86 192-192z" fill="none" stroke="currentColor" stroke-miterlimit="10" stroke-width="32"/>
+                <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="M320 320L192 192M192 320l128-128"/>
+            </svg>`,
+            backgroundColor: '#fef2f2',
+            gradient: 'linear-gradient(145deg, #fee2e2, #fca5a5)',
+            borderColor: '#fca5a5',
+            textColor: '#991b1b',
+            iconBackground: '#ef4444'
+        }
+    };
+
+    const showToast = (message, type = 'info', duration = 3000) => {
+        const container = createContainer();
+        const styles = toastTypes[type];
+        
+        // Create toast wrapper
+        const toast = document.createElement('div');
+        Object.assign(toast.style, {
+            backgroundColor: styles.backgroundColor,
+            background: styles.gradient,
+            padding: '1rem',
+            borderRadius: '1rem',
+            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1rem',
+            minWidth: '300px',
+            maxWidth: '500px',
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+            opacity: 0,
+            transform: 'translateX(100%) scale(0.9)',
+            position: 'relative',
+            overflow: 'hidden'
+        });
+
+        // Create icon container
+        const iconContainer = document.createElement('div');
+        Object.assign(iconContainer.style, {
+            backgroundColor: styles.iconBackground,
+            color: 'white',
+            width: '2.5rem',
+            height: '2.5rem',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: '0',
+            fontSize: '1.5rem'
+        });
+        iconContainer.innerHTML = styles.icon;
+
+        // Create message container
+        const messageContainer = document.createElement('div');
+        Object.assign(messageContainer.style, {
+            flex: '1',
+            color: styles.textColor,
+            fontWeight: '500'
+        });
+        messageContainer.textContent = message;
+
+        // Assemble toast
+        toast.appendChild(iconContainer);
+        toast.appendChild(messageContainer);
+        container.appendChild(toast);
+
+        // Animations
+        const tl = gsap.timeline();
+        
+        // Entrance animation
+        tl.to(toast, {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.3,
+            ease: 'back.out(1.7)'
+        });
+
+        // Auto close animation
+        setTimeout(() => {
+            gsap.to(toast, {
+                x: 100,
+                opacity: 0,
+                scale: 0.9,
+                duration: 0.3,
+                ease: 'back.in(1.7)',
+                onComplete: () => {
+                    if (container.contains(toast)) {
+                        container.removeChild(toast);
+                    }
+                    if (container.children.length === 0) {
+                        document.body.removeChild(container);
+                    }
+                }
+            });
+        }, duration);
+    };
+
+    // Form submission handler
     document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById('db-form');
+        const submitButton = document.getElementById('submit-button');
+        const buttonText = submitButton.querySelector('.button-text');
+        const loader = submitButton.querySelector('.loader');
+
         form.addEventListener('submit', async function (event) {
-            event.preventDefault(); // Prevent the default form submission behavior
+            event.preventDefault();
+
+            // Disable button and show loader
+            submitButton.disabled = true;
+            buttonText.style.display = 'none';
+            loader.style.display = 'inline-block';
 
             // Fetch input values
             const hostname = document.getElementById('hostname').value;
@@ -155,7 +327,6 @@
             const dbname = document.getElementById('dbname').value;
 
             try {
-                // Send data to the backend
                 const response = await fetch("{% url 'connect_to_database' %}", {
                     method: "POST",
                     headers: {
@@ -165,32 +336,24 @@
                     body: JSON.stringify({ hostname, username, password, dbname })
                 });
                 const result = await response.json();
-                console.log("metro",result);
-
-                // Handle the response
-                const responseDiv = document.getElementById("response-message");
-                responseDiv.innerHTML = ""; // Clear any existing messages
 
                 if (result.status === "success") {
-                alert("success");
-                
-                
-                    responseDiv.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-                    // Redirect to the home page after 2 seconds
-                    // setTimeout(() => {
-                    //     window.location.href = "{% url 'home' %}";
-                    window.location.href = result.url
-                    // }, 2000);
+                    showToast(result.message, 'success');
+                    window.location.href = result.url;
                 } else {
-                    alert("error")
-                    responseDiv.innerHTML = `<div class="alert alert-error">${result.message}</div>`;
+                    showToast(result.message, 'error');
                 }
             } catch (error) {
                 console.error("Error connecting to the database:", error);
-                document.getElementById("response-message").innerHTML =
-                    `<div class="alert alert-error">An unexpected error occurred.</div>`;
+                showToast('An unexpected error occurred.', 'error');
+            } finally {
+                // Reset button state
+                submitButton.disabled = false;
+                buttonText.style.display = 'inline-block';
+                loader.style.display = 'none';
             }
         });
     });
 </script>
 {% endblock %}
+
