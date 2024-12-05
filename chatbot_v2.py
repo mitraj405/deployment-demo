@@ -111,9 +111,16 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             x_label=args["x_label"],
                             y_label=args["y_label"],
                             secondary_y_label=args.get("secondary_y_label", None),
+                            
                         )
 
                         created = True
+                    elif tool.function.name == "table_and_chat":
+                        print("table and chart")
+                        result = table_and_chat(
+                                sql_query=args["sql_query"],
+                                column_names=args["column_names"],
+                        )
                     elif tool.function.name == "line":
                         print(
                             f"line(sql_query={args['sql_query']}, x_dim={args['x_dim']}, y_dim={args['y_dim']}, name={args['name']}, secondary_y={args['secondary_y']})"
@@ -127,6 +134,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             y_dim=args["y_dim"],
                             name=args["name"],
                             secondary_y=args["secondary_y"],
+                                thread_from_previous_page = thread_from_previous_page
+                            
                         )
 
                         traces.append(result)
@@ -145,6 +154,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             y_dim=args["y_dim"],
                             name=args["name"],
                             secondary_y=args["secondary_y"],
+                                thread_from_previous_page = thread_from_previous_page
+
                         )
 
                         traces.append(result)
@@ -185,6 +196,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             name=args["name"],
                             bins=args["bins"],
                             secondary_y=args["secondary_y"],
+                                thread_from_previous_page = thread_from_previous_page
+
                         )
 
                         traces.append(result)

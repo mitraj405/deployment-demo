@@ -290,7 +290,72 @@ def query(sql_query: str,thread_from_previous_page :str=None):
         return record
 
 
-def bar(sql_query: str, x_dim: int, y_dim: int, name: str, secondary_y: bool):
+
+
+# Define the combined tool function
+def table_and_chat(sql_query: str, column_names: str, thread_from_previous_page=None, chat_input=None):
+    """This function handles both SQL query execution (for displaying tables) and chat interaction.
+
+    Args:
+        sql_query (str): The SQL query to be executed.
+        column_names (str or list): Column names for the table.
+        thread_from_previous_page (str, optional): If continuing from a previous conversation.
+        chat_input (str, optional): The input message to be sent for chat-like response.
+    """
+    # First, handle the SQL query (table generation)
+    if isinstance(column_names, str):
+        column_names = column_names.replace("[", "").replace("]", "").replace("'", "").replace('"', "").replace("\\", "")
+        if ", " in column_names:
+            column_names = column_names.split(", ")
+        else:
+            column_names = column_names.split(",")
+        column_names = [name.replace("_", " ").title() for name in column_names]
+
+    # SQL Query to get data (Table generation)
+    if thread_from_previous_page is not None:
+        sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        connection = mysql.connector.connect(
+            host="sql7.freemysqlhosting.net",
+            user="sql7748185",
+            password="bbtqvgiWqw",
+            database="sql7748185"
+        )
+        cursor = connection.cursor()
+        cursor.execute(sql_query)
+        result = cursor.fetchall()
+        record = pd.DataFrame(result, columns=column_names)
+        cursor.close()
+        connection.close()
+        print(record)
+    else:
+        sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
+        cursor = sqliteConnection.cursor()
+        cursor.execute(sql_query)
+        record = pd.DataFrame(cursor.fetchall(), columns=column_names)
+        cursor.close()
+        sqliteConnection.close()
+        print(record)
+
+    # Now, handle chat response if available
+    if chat_input:
+        # Create the assistant client and initiate chat (similarly as in your existing setup)
+        assistant = OpenAI(api_key=os.environ['OPENAI_API_KEY']).beta.assistants.create(
+            name="Assistant for Both Table and Chat",
+            instructions=open("./utils/system-instructions.txt", "r").read(),
+            tools=[table_and_chat],  # Add this tool to the assistant
+            model="gpt-4o"
+        )
+        ass_ID = assistant.id
+        # Here, you can use the chat_input to pass to the assistant (can be for table/other queries)
+        response = assistant.chat(messages=[{"role": "user", "content": chat_input}])
+        print(response['choices'][0]['message']['content'])
+
+    return record  # Returns the table and chat results
+
+
+
+def bar(sql_query: str, x_dim: int, y_dim: int, name: str, secondary_y: bool, thread_from_previous_page : str = None):
     """Adds a bar trace to chart.
 
     Args:
@@ -305,7 +370,7 @@ def bar(sql_query: str, x_dim: int, y_dim: int, name: str, secondary_y: bool):
         f"bar(\n  {sql_query=},\n  {x_dim=},\n  {y_dim=},\n {name=},\n {secondary_y=}\n)"
     )
 
-    result = query(sql_query)
+    result = query(sql_query,thread_from_previous_page)
 
     # if grouped_dim == -1:
     #     grouped_dim = None
@@ -325,6 +390,7 @@ def line(
     y_dim: int,
     name: str,
     secondary_y: bool,
+     thread_from_previous_page : str = None
 ):
     """Adds a line trace to pre-existing chart.
 
@@ -340,7 +406,7 @@ def line(
         f"line(\n  {sql_query=},\n  {x_dim=},\n  {y_dim=},\n {name=},\n {secondary_y=}\n)"
     )
 
-    result = query(sql_query)
+    result = query(sql_query,thread_from_previous_page)
 
     trace = go.Scatter(
         x=result[int(x_dim)],
@@ -352,7 +418,7 @@ def line(
     return trace
 
 
-def histogram(sql_query: str, x_dim: int, bins: int, name: str, secondary_y: bool):
+def histogram(sql_query: str, x_dim: int, bins: int, name: str, secondary_y: bool, thread_from_previous_page : str = None):
     """Adds a histogram trace to pre-existing chart.
 
     Args:
@@ -367,7 +433,7 @@ def histogram(sql_query: str, x_dim: int, bins: int, name: str, secondary_y: boo
         f"histogram(\n  {sql_query=},\n  {x_dim=},\n  {bins=},\n  {name=},\n  {secondary_y=}\n)"
     )
 
-    result = query(sql_query)
+    result = query(sql_query,thread_from_previous_page)
 
     trace = go.Histogram(x=result[int(x_dim)], nbinsx=int(bins), name=name)
 

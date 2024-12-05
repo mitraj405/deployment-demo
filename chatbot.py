@@ -99,6 +99,7 @@ def send_message(message):
                             y_dim=args["y_dim"],
                             name=args["name"],
                             secondary_y=args["secondary_y"],
+                            
                         )
 
                         traces.append(result)
