@@ -2,15 +2,17 @@
 {% block title %}Chat{% endblock title %}
 {% block style %}
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap&family=Ubuntu&display=swap');
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
     }
 
     body {
-        background-color: #111111;
+        font-family: 'Poppins', sans-serif;
+        background-color: #000;
         color: #FFFFFF;
         display: flex;
         justify-content: center;
@@ -24,7 +26,7 @@
         text-align: center;
         width: 100%;
         margin-top: 60px;
-        height: 80vh;
+        height: 33vh;
     }
 
     header {
@@ -32,28 +34,29 @@
         position: fixed;
         top: 0;
         left: 0;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: #0A0E1A;
         padding: 10px 0;
-        font-size: 0.9rem; /* Reduce header font size */
     }
 
     .navbar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1200px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 14px 20px;
+
     }
 
     .logo {
         display: flex;
         align-items: center;
         gap: 5px;
+        font-family: 'Ubuntu', sans-serif;
     }
 
     .logo img {
-        width: 80px; /* Reduce logo size */
+        width: 100px;
+        /* Reduce logo size */
     }
 
     .nav-links {
@@ -79,7 +82,7 @@
         /* margin:-3px; */
     }
 
-    
+
 
     .card-container {
         display: flex;
@@ -97,13 +100,14 @@
     .card {
         border-color: rgba(255, 255, 255, 0.1);
         background-color: #0f0f0f;
-        padding: 5px;
         border-radius: 50px;
         text-align: center;
-        transition: background-color 0.3s ease;
-        font-size: 0.5rem; /* Reduce card text size */
-        padding-left : 20px;
+        font-size: 0.5rem;
+        /* Reduce card text size */
+        padding-top: 10px;
+        padding-left: 20px;
         padding-right: 20px;
+        transition: background-color 0.3s ease;
     }
 
     .card:hover {
@@ -132,9 +136,9 @@
 
     .chat-box input {
         width: 90%;
-        padding: 8px;
+        padding: 10px 15px;
         border: none;
-        border-radius: 20px;
+        border-radius: 10px;
         background-color: rgba(255, 255, 255, 0.1);
         color: white;
         font-size: 0.9rem;
@@ -144,7 +148,7 @@
     .chat-box button {
         background-color: #4A5568;
         border: none;
-        padding: 8px;
+        padding: 10px 15px;
         border-radius: 5px;
         cursor: pointer;
         color: white;
@@ -153,7 +157,8 @@
     }
 
     .chat-box button:hover {
-        background-color: #718096;
+        background-color: #3d4450;
+        transform: scale(1.05);
     }
 
     @media (max-width: 768px) {
@@ -192,132 +197,363 @@
         align-items: center;
         max-width: 70%;
     }
-/* For Chat Messages Container */
-.chat-messages {
-    height: 65vh;
-    width: 85vw;
-    overflow-y: auto;
-    background-color: #1A202C; /* Darker background for chat area */
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Add spacing between messages */
-}
 
-/* For User Messages (Align Right) */
-.user-message {
-    color: white;
-    background-color: #2C7A7B; /* User message background color */
-    align-self: flex-end; /* Align user messages to the right */
-    padding: 10px 15px;
-    border-radius: 15px 15px 0px 15px; /* Rounded corners */
-    max-width: 70%; /* Set a maximum width */
-    width: fit-content; /* Make the width dynamic based on content */
-    word-wrap: break-word; /* Wrap long words to prevent overflow */
-    text-align: left; /* Text alignment inside the box */
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: auto; /* Ensure it is pushed to the right */
-}
-
-/* For Bot Messages (Align Left) */
-.bot-message {
-    color: white;
-    background-color: #4A5568; /* Bot message background color */
-    align-self: flex-start; /* Align bot messages to the left */
-    padding: 10px 15px;
-    border-radius: 15px 15px 15px 0px; /* Rounded corners */
-    max-width: 70%; /* Set a maximum width */
-    width: fit-content; /* Make the width dynamic based on content */
-    word-wrap: break-word; /* Wrap long words to prevent overflow */
-    text-align: left; /* Text alignment inside the box */
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-right: auto; /* Ensure it is pushed to the left */
-}
-
-
-
-/* For Bot Messages */
-
-
-    .company{
-        margin-top:60px;
+    /* For Chat Messages Container */
+    .chat-messages {
+        height: 70vh;
+        width: 85vw;
+        overflow-y: auto;
+        background-color: #212121;
+        /* Darker background for chat area */
+        padding: 10px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        scroll-behavior: smooth;
+        /* Add spacing between messages */
     }
 
+    .chat-messages {
 
-/* Add some animation to bot messages */
-.bot-message.waviy span {
-    display: inline-block;
-    animation: waviy 1s infinite;
-}
+        h1,
+        h2,
+        h3 {
+            color: #a53333;
+            margin-top: 20px;
+        }
 
-@keyframes waviy {
-    0%, 100% {
-        transform: translateY(0);
+        p {
+            color: #a53333;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
     }
-    50% {
-        transform: translateY(-10px);
+
+    .chat-messages::-webkit-scrollbar {
+        width: 10px;
     }
-}
+
+    .chat-messages::-webkit-scrollbar-thumb {
+        background-color: #4A5568;
+        border-radius: 10px;
+    }
+
+    .chat-messages::-webkit-scrollbar-track {
+        background-color: #0A0E1A;
+    }
+
+    /* For User Messages (Align Right) */
+    .user-message {
+        color: white;
+        background-color: #2C7A7B;
+        /* User message background color */
+        align-self: flex-end;
+        /* Align user messages to the right */
+        padding: 10px 15px;
+        border-radius: 15px 15px 0px 15px;
+        /* Rounded corners */
+        max-width: 70%;
+        /* Set a maximum width */
+        width: fit-content;
+        /* Make the width dynamic based on content */
+        word-wrap: break-word;
+        /* Wrap long words to prevent overflow */
+        text-align: left;
+        /* Text alignment inside the box */
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: auto;
+        /* Ensure it is pushed to the right */
+    }
+
+    /* For Bot Messages (Align Left) */
+    .bot-message {
+        color: white;
+        background-color: #303641;
+        align-self: flex-start;
+        padding: 10px 15px;
+        border-radius: 15px 15px 15px 0px;
+        max-width: 70%;
+        width: fit-content;
+        word-wrap: break-word;
+        text-align: left;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-right: auto;
+        display: flex;
+        gap: 10px;
+        position: relative;
+    }
+
+    .bot-logo {
+        width: 24px;
+        height: 24px;
+        min-width: 24px;
+        border-radius: 50%;
+        margin-top: 5px;
+    }
+
+    .bot-message-content {
+        flex: 1;
+    }
+
+    /* For Bot Messages */
+
+
+    .company {
+        margin-top: 60px;
+    }
+
+    /* Add some animation to bot messages */
+    .bot-message.waviy span {
+        display: inline-block;
+        animation: waviy 1s infinite;
+    }
+
+    @keyframes waviy {
+
+        0%,
+        100% {
+            transform: translateY(0);
+        }
+
+        50% {
+            transform: translateY(-10px);
+        }
+    }
 
     .waviy {
         position: relative;
-        font-size: 0.8rem; /* Reduce typing animation size */
+        font-size: 0.8rem;
+        /* Reduce typing animation size */
     }
 
 
     .back-button {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-    gap: 10px;
-}
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        gap: 10px;
+    }
 
-.back-button a {
-    color: #FFFFFF;
-    font-size: 16px;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
+    .back-button a {
+        color: #FFFFFF;
+        font-size: 16px;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
 
-.back-button a:hover {
-    color: #CCCCCC;
-}
+    .back-button a:hover {
+        color: #CCCCCC;
+    }
 
-.back-button svg {
-    width: 24px;
-    height: 24px;
-}
+    .back-button svg {
+        width: 24px;
+        height: 24px;
+    }
 
-/* SQL Connector Button */
-#sql-connector {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 15px;
-    background-color: #4A5568;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
+    /* SQL Connector Button */
+    #sql-connector {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 8px 15px;
+        background-color: #4A5568;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
 
-#sql-connector img {
-    width: 24px;
-    height: 24px;
-}
+    #sql-connector img {
+        width: 24px;
+        height: 24px;
+    }
 
-#sql-connector:hover {
-    background-color: #718096;
-}
+    #sql-connector:hover {
+        background-color: #718096;
+    }
 
+    #back-button {
+        background: black;
+        border-radius: 50px;
+        padding: 10px 20px;
+        transition: all 0.3s ease;
+    }
 
+    #back-button:hover {
+        background: #282828;
+    }
+
+    /* Markdown code block styling */
+    .bot-message pre {
+        background-color: #1b1c1f;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+        position: relative;
+        overflow-x: auto;
+    }
+
+    .bot-message pre code {
+        color: #E2E8F0;
+        font-family: 'Fira Code', monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    /* Copy button styling */
+    .copy-button {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        padding: 0.5rem;
+        background-color: #2D3748;
+        border: none;
+        border-radius: 4px;
+        color: #A0AEC0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+    }
+
+    .copy-button:hover {
+        background-color: #4A5568;
+        color: #FFFFFF;
+    }
+
+    /* Markdown general styling */
+    .bot-message {
+        line-height: 1.6;
+    }
+
+    .bot-message p {
+        margin-bottom: 1rem;
+        color: #E2E8F0;
+    }
+
+    .bot-message h1, .bot-message h2, .bot-message h3 {
+        color: #90CDF4;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .bot-message ul, .bot-message ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .bot-message a {
+        color: #63B3ED;
+        text-decoration: none;
+    }
+
+    .bot-message a:hover {
+        text-decoration: underline;
+    }
+
+    /* Loading animation for chat */
+    .bot-message.loading {
+        background-color: #4A5568;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 15px 20px;
+    }
+
+    .typing-animation {
+        display: flex;
+        gap: 4px;
+    }
+
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #ffffff;
+        border-radius: 50%;
+        opacity: 0.4;
+    }
+
+    .typing-dot:nth-child(1) {
+        animation: typingDot 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) {
+        animation: typingDot 1.4s infinite 0.2s;
+    }
+
+    .typing-dot:nth-child(3) {
+        animation: typingDot 1.4s infinite 0.4s;
+    }
+
+    @keyframes typingDot {
+        0%, 60%, 100% {
+            transform: translateY(0);
+            opacity: 0.4;
+        }
+        30% {
+            transform: translateY(-4px);
+            opacity: 1;
+        }
+    }
+
+    /* Add this CSS for the speech button */
+    .bot-message {
+        /* ... existing styles ... */
+        position: relative;
+    }
+
+    .speech-button {
+        position: absolute;
+        bottom: 5px;
+        left: 5px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        color: #A0AEC0;
+        padding: 5px;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .speech-button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #FFFFFF;
+    }
+
+    .speech-button.speaking {
+        color: #63B3ED;
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
 </style>
 {% endblock style %}
 
@@ -330,8 +566,10 @@
         <!-- Left: Back Button and Logo -->
         <div style="display: flex; align-items: center; gap: 15px;">
             <!-- Back Button -->
-            <a id="back-button" href="#" style="display: flex; align-items: center; text-decoration: none; color: #FFFFFF;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <a id="back-button" href="#"
+                style="display: flex; align-items: center; text-decoration: none; color: #FFFFFF;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="19" y1="12" x2="5" y2="12"></line>
                     <polyline points="12 19 5 12 12 5"></polyline>
                 </svg>
@@ -340,15 +578,17 @@
 
             <!-- Logo -->
             <div class="logo" style="display: flex; align-items: center; gap: 5px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Sql_run_gear.svg" alt="DataTalk.ai logo" style="width: 80px;">
+                <img src="/static/logo.png" alt="DataTalk.ai logo" style="width: 80px;">
                 <h2 style="margin: 0; font-size: 20px;">DataTalk.ai</h2>
             </div>
         </div>
 
         <!-- Right: SQL Connector Button -->
         <div style="display: flex; align-items: center; gap: 10px;">
-            <button id="sql-connector" onclick="redirectToSQLConnector()" style="display: flex; align-items: center; gap: 8px; padding: 8px 15px; background-color: #4A5568; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
-                <img src="https://cdn-icons-png.flaticon.com/512/2772/2772128.png" alt="SQL Icon" style="width: 24px; height: 24px;">
+            <button id="sql-connector" onclick="redirectToSQLConnector()"
+                style="display: flex; align-items: center; gap: 8px; padding: 8px 15px; background-color: #4A5568; color: white; border: none; border-radius: 5px; cursor: pointer; transition: background-color 0.3s ease;">
+                <img src="https://cdn-icons-png.flaticon.com/512/2772/2772128.png" alt="SQL Icon"
+                    style="width: 24px; height: 24px;">
                 <span>SQL Connector</span>
             </button>
         </div>
@@ -363,45 +603,7 @@
     <div class="company">
         <h1>How can I help you?</h1>
     </div>
-    <main>
-        <div class="card-container">
-            <div class="card" onclick="getCardText(this)">
-                <a href="/home" class="card-link">
-                    <h5 style="color: rgb(190, 179, 179); margin: 0.5rem;">Plot monthwise rask</h5>
-                    <p></p>
-                </a>
-            </div>
-            <div class="card" onclick="getCardText(this)">
-                <a href="/home" class="card-link">
-                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">Show monthwise RASK in table</h5>
-                    <p></p>
-                </a>
-            </div>
-            <div class="card" onclick="getCardText(this)">
-                <a href="/home" class="card-link">
-                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">Average Sale?</h5>
-                    <p></p>
-                </a>
-            </div>
-        </div>
-
-        <!-- Second row with 2 columns -->
-        <div class="card-container">
-            <div class="card">
-                <a href="/home" class="card-link" onclick="getCardText(this)">
-                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">Compare RASK with previous year</h5>
-                    <p href="/home" style="color: white;"></p>
-                    <p href="/home" style="color: white;"></p>
-                </a>
-            </div>
-            <div class="card" onclick="getCardText(this)">
-                <a href="#" class="card-link">
-                    <h5 style="color: rgb(190, 179, 179);margin: 0.5rem;">What is RASK?</h5>
-                    <p></p>
-                </a>
-            </div>
-        </div>
-    </main>
+    
 </div>
 
 
@@ -411,34 +613,39 @@
 
 <form class="chat-box" id="chat-form">
     <input type="text" id="chat-input" placeholder="Type a query..." />
-    <button id="batman" type="submit">Send</button>
+    <button id="batman" type="submit">
+        <span class="button-text">Send</span>
+        <div class="loader" style="display: none;"></div>
+    </button>
 </form>
 
 {% endblock body %}
 
 {% block js %}
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
 
 
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    // const urlParams = new URLSearchParams(window.location.search);
-    const threadId = urlParams.get('thread_id');
-    const assistantId = urlParams.get('assistant_id');
-    console.log(threadId,assistantId,"hello from home page");
-    if (threadId) {
-        localStorage.setItem('threadId', threadId);  // Store thread ID in localStorage
-        localStorage.setItem('assistantId', assistantId);  // Store ass ID in localStorage
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        // const urlParams = new URLSearchParams(window.location.search);
+        const threadId = urlParams.get('thread_id');
+        const assistantId = urlParams.get('assistant_id');
+        console.log(threadId, assistantId, "hello from home page");
+        if (threadId) {
+            localStorage.setItem('threadId', threadId);  // Store thread ID in localStorage
+            localStorage.setItem('assistantId', assistantId);  // Store ass ID in localStorage
 
-    }
-    const chatOpen = urlParams.get('chat');
-    console.log(chatOpen);
-    if (chatOpen === 'open') {
-        document.getElementById('chat-messages').style.display = 'block';
-        document.getElementById('container').style.display ='none   ';    
-        document.getElementById('main-content').style.display = 'none';  // Assuming 'main-content' is the ID for the main page area
-    }
-};
+        }
+        const chatOpen = urlParams.get('chat');
+        console.log(chatOpen);
+        if (chatOpen === 'open') {
+            document.getElementById('chat-messages').style.display = 'block';
+            document.getElementById('container').style.display = 'none   ';
+            document.getElementById('main-content').style.display = 'none';  // Assuming 'main-content' is the ID for the main page area
+        }
+    };
 
 
     function redirectToSQLConnector() {
@@ -469,10 +676,10 @@ window.onload = function() {
 
 
     document.getElementById('chat-form').addEventListener('submit', handleChatSubmit);
-     // document.querySelector('.batman').disabled = true;
-//      document.getElementById('batman').disabled = true;
+    // document.querySelector('.batman').disabled = true;
+    //      document.getElementById('batman').disabled = true;
 
-// document.getElementById('chat-input').disabled = true;
+    // document.getElementById('chat-input').disabled = true;
     document.getElementById('chat-messages').style.display = 'none';
     function disableInput() {
         // document.querySelector('.batman').disabled = true;
@@ -490,65 +697,157 @@ window.onload = function() {
     function handleChatSubmit(event) {
         event.preventDefault();
         const input = document.getElementById('chat-input');
-        console.log(input);
         const message = input.value.trim();
         const urlParams = new URLSearchParams(window.location.search);
-        const chatType = urlParams.get('chat'); // Extract 'chat' parameter from URL
-        // alert("first");
+        const chatType = urlParams.get('chat');
+
         if (message) {
             document.getElementById('chat-messages').style.display = 'block';
             document.getElementById('container').style.display = 'none';
 
             const chatMessages = document.getElementById('chat-messages');
-            const threadId = urlParams.get('thread_id'); // Get 'thread_id' from URL
-            const assistantId = urlParams.get('assistant_id'); // Get 'assistant_id' from URL
+            const threadId = urlParams.get('thread_id');
+            const assistantId = urlParams.get('assistant_id');
 
-            console.log("submit pressed",assistantId,threadId);
-            // alert("second");
             // Clear input and prepare to send message
-            
             input.value = '';
             input.disabled = true;
-            document.getElementById('batman').disabled = true; // Disable the send button temporarily
+            document.getElementById('batman').disabled = true;
 
-            // Simulate sending message
+            // Add user message
             chatMessages.innerHTML += `<div class='user-message'>${message}</div>`;
-            console.log("hi",threadId,assistantId);
+
+            // Add loading animation
+            chatMessages.innerHTML += `
+                <div class='bot-message loading' id='loading-message'>
+                    <div class="typing-animation">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            `;
+
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
             fetch('/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
-                body: JSON.stringify({ message: message, threadId: threadId,assistantId:assistantId ,chatType:chatType })
+                body: JSON.stringify({ 
+                    message: message, 
+                    threadId: threadId, 
+                    assistantId: assistantId, 
+                    chatType: chatType 
+                })
             })
             .then(response => response.json())
             .then(data => {
-                // After receiving the response, display the bot's message
+                // Remove loading animation
+                document.getElementById('loading-message')?.remove();
+
                 if (data.response) {
                     if (data.message_type == 'text') {
-                        chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`; // Add bot response
+                        const parsedResponse = marked.parse(data.response);
+                        const botMessage = document.createElement('div');
+                        botMessage.className = 'bot-message';
+                        
+                        // Add the logo
+                        const logo = document.createElement('img');
+                        logo.src = '/static/logo.png';  // Update this path to your logo
+                        logo.className = 'bot-logo';
+                        botMessage.appendChild(logo);
+                        
+                        // Add the message content
+                        const messageContent = document.createElement('div');
+                        messageContent.className = 'bot-message-content';
+                        messageContent.innerHTML = parsedResponse;
+                        
+                        // Add speech button
+                        const speechButton = document.createElement('button');
+                        speechButton.className = 'speech-button';
+                        speechButton.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        `;
+                        
+                        speechButton.onclick = () => {
+                            const textToSpeak = messageContent.textContent;
+                            speakText(textToSpeak, speechButton);
+                        };
+                        
+                        messageContent.appendChild(speechButton);
+                        botMessage.appendChild(messageContent);
+                        
+                        // Add copy buttons to code blocks
+                        const codeBlocks = messageContent.querySelectorAll('pre code');
+                        codeBlocks.forEach(block => {
+                            const copyButton = document.createElement('button');
+                            copyButton.className = 'copy-button';
+                            copyButton.innerHTML = `
+                                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                </svg>
+                                <span>Copy</span>
+                            `;
+                            
+                            copyButton.onclick = () => {
+                                navigator.clipboard.writeText(block.textContent);
+                                copyButton.innerHTML = `
+                                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    <span>Copied!</span>
+                                `;
+                                setTimeout(() => {
+                                    copyButton.innerHTML = `
+                                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em">
+                                            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                        </svg>
+                                        <span>Copy</span>
+                                    `;
+                                }, 2000);
+                            };
+
+                            block.parentElement.style.position = 'relative';
+                            block.parentElement.appendChild(copyButton);
+                        });
+
+                        chatMessages.appendChild(botMessage);
                     } else if (data.message_type == 'chart') {
-                        renderChart(data.response)
-                    }
-                    else if (data.message_type == 'query') {
-                        // const response = JSON.parse(data.response);
+                        renderChart(data.response);
+                    } else if (data.message_type == 'query') {
                         const dataframe = convertResponseToArray(data.response);
-                        console.log(dataframe);
                         renderDataFrame(dataframe);
                     }
-                    chatMessages.scrollTop = chatMessages.scrollHeight                
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
                 }
-                input.disabled = false;
-                document.getElementById('batman').disabled = false; // Re-enable the send button
             })
             .catch(error => {
                 console.error('Error:', error);
+                document.getElementById('loading-message')?.remove();
+                chatMessages.innerHTML += `
+                    <div class='bot-message error'>
+                        Sorry, there was an error processing your request.
+                    </div>
+                `;
+            })
+            .finally(() => {
                 input.disabled = false;
                 document.getElementById('batman').disabled = false;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             });
         }
-    }    
+    }
     function convertResponseToArray(data) {
 
         data = JSON.parse(data)
@@ -704,7 +1003,7 @@ window.onload = function() {
             .then(response => response.json())
             .then(data => {
                 if (data.response) {
-                    document.getElementById('loading').remove();
+                    document.getElementById('loading')?.remove();
                     if (data.message_type == 'text') {
                         chatMessages.innerHTML += `<div class='bot-message'>${data.response}</div>`;
                     } else if (data.message_type == 'chart') {
@@ -723,6 +1022,44 @@ window.onload = function() {
             });
         console.log(cardText);
     }
+
+    // Update the speakText function to toggle speech
+    function speakText(text, button) {
+        // Check if the button is already speaking
+        if (button.classList.contains('speaking')) {
+            // Stop speaking
+            window.speechSynthesis.cancel();
+            button.classList.remove('speaking');
+        } else {
+            // Start speaking
+            const utterance = new SpeechSynthesisUtterance(text);
+            
+            // Add speaking class to button
+            button.classList.add('speaking');
+            
+            utterance.onend = () => {
+                button.classList.remove('speaking');
+            };
+            
+            utterance.onerror = () => {
+                button.classList.remove('speaking');
+            };
+            
+            // Get available voices and set to Microsoft Zira
+            let voices = speechSynthesis.getVoices();
+            const selectedVoice = voices.find(voice => voice.name === 'Microsoft Zira - English (United States)');
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+            }
+            
+            window.speechSynthesis.speak(utterance);
+        }
+    }
+
+    // Ensure voices are loaded
+    speechSynthesis.onvoiceschanged = () => {
+        speechSynthesis.getVoices();
+    };
 </script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"> </script>

@@ -244,7 +244,7 @@
 #             )
 
 #     return JsonResponse({"status": "error", "message": "Invalid request method. Only POST is allowed."}, status=405)
-from curses import window
+# from curses import window
 import mysql.connector
 from mysql.connector import Error
 import json
