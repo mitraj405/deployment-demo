@@ -8,9 +8,9 @@ admin.site.index_title = "Welcome to DataTalk Admin Portal"
 
 urlpatterns = [
     path('', views.index , name='home'),
-    path('company', views.company , name='company'),
+    path('choose', views.choose , name='.choose'),
     path('aviation', views.aviation , name='aviation'),
-    path('finance', views.fianance , name='fianance'),
+    path('choose', views.choose , name='choose'),
     path('banking', views.banking , name='banking'),
     path('ecommerse', views.ecommerse , name='ecommerse'),
     path('sqlconnector', views.sqlconnector , name='sqlconnector'),

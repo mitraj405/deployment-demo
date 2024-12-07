@@ -426,6 +426,7 @@ def connect_to_databaseup(request):
                         tools=get_tools([
                             year_over_year,
                             table,
+                            # table_and_chart,
                             query,
                             create_chart,
                             show_chart,

@@ -123,10 +123,10 @@ import mysql.connector
 from mysql.connector import Error
 
 
-def company(request):
+def choose(request):
     types = [
         {"name": "Aviation", "url": reverse("banking")},
-        {"name": "Finance", "url": reverse("fianance")},
+        {"name": "company", "url": reverse("company")},
         {"name": "E-commerce", "url": reverse("ecommerse")},
     ]
     return render(request, "company.html", {"types": types})
@@ -134,8 +134,8 @@ def company(request):
 def aviation(request):
     return render(request,"aviation.html")
 
-def fianance(request):
-    return render(request,"finance.html")
+def choose(request):
+    return render(request,"choose.html")
 
 def banking(request):
     return render(request,"banking.html")
