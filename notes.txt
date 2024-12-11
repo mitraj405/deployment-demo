@@ -12,7 +12,8 @@ sql12.freemysqlhosting.net
 UCvwmCeUp4
 
 
-
+0.46 
+0.80
 
 
 
