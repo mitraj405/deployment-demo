@@ -259,8 +259,16 @@ from openai import OpenAI
 from django.shortcuts import redirect
 from django.urls import reverse
 
+from flask import Flask, request, jsonify
+import mysql.connector
+from mysql.connector import Error
 
-def connect_to_databaseup(request):
+app = Flask(__name__)
+
+@app.route('/connect', methods=['POST'])
+def connect_to_databaseup():
+    # print(request+"batman")
+    
     """
     Handle database connection, fetch schema, send a 'Hi' message using OpenAI,
     and respond with the assistant's reply and database schema details.
@@ -340,9 +348,10 @@ def connect_to_databaseup(request):
 
     # return JsonResponse({"status": "error", "message": "Invalid request method. Only POST is allowed."}, status=405)
 
-    if request.method == 'POST':
+    if request.is_json:
         try:
-            data = json.loads(request.body)
+            data = request.get_json()  # Automatically parses JSON data
+            print(data)
             host_name = data.get('hostname')
             user_name = data.get('username')
             user_password = data.get('password')
@@ -362,12 +371,12 @@ def connect_to_databaseup(request):
             )
 
             if connection.is_connected():
-                request.session['db_credentials'] = {
-                    'host': host_name,
-                    'username': user_name,
-                    'password': user_password,
-                    'database': db_name
-                }
+                # request.session['db_credentials'] = {
+                #     'host': host_name,
+                #     'username': user_name,
+                #     'password': user_password,
+                #     'database': db_name
+                # }
                 with open('database_details.txt', 'w') as file:
                     cursor = connection.cursor()
                     firstString = "Hello! I am setting up a virtual assistant for a web application that connects to an SQL database. You have to make this like chat, not answer response , make it responsive, ask as many question as you can for clarity. Here is the structure of the database:"
@@ -471,28 +480,21 @@ def connect_to_databaseup(request):
                 # print(messages[0].content[0].text.value)
                 # print("thread value is ",thread_id, assistant_id)
                 # window.location.href = "/home?chat=open"
-                url = reverse('home') + f'?chat=open&thread_id={thread_id}&assistant_id={assistant_id}'
-                # window.location.href = url
-                
-                # return redirect(f'/home?chat=open&thread_id={thread_id}&assistant_id={assistant_id}')
-
-                return JsonResponse({
+                return jsonify({
                     "status": "success",
                     "message": f"Connected to database {db_name}.",
-                    "assistant_messages": assistant_responses,
-                    "thread_id": thread_id,  # Return the thread ID to the client for subsequent requests
-                    "url" : url
-                })
+                    "thread_id": thread_id,
+                    "assistant_id": assistant_id
+                }), 200
+            else:
+                return jsonify({"status": "error", "message": "Invalid request method. Only POST is allowed."}), 405
 
         except Error as e:
-            return JsonResponse({"status": "error", "message": f"Database connection failed: {str(e)}"}, status=500)
+            return jsonify({"status": "error", "message": f"Database connection failed: {str(e)}"}), 500
         except json.JSONDecodeError:
-            return JsonResponse({"status": "error", "message": "Invalid JSON payload."}, status=400)
+            return jsonify({"status": "error", "message": "Invalid JSON payload."}), 400
         except Exception as e:
-            return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {str(e)}"}, status=500)
-
-    return JsonResponse({"status": "error", "message": "Invalid request method. Only POST is allowed."}, status=405)
-
+            return jsonify({"status": "error", "message": f"An unexpected error occurred: {str(e)}"}), 500
 
 def sql_executor(request,query):
     if 1==1:
@@ -521,3 +523,5 @@ def sql_executor(request,query):
             return JsonResponse({"status": "error", "message": f"An unexpected error occurred: {str(e)}"}, status=500)
 
     return JsonResponse({"status": "error", "message": "No database connection or invalid request method."}, status=400)
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)  # Start Flask app on localhost

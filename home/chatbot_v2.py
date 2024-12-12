@@ -22,7 +22,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
     client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
     assistant = client.beta.assistants.create(
     name="Data Analyst for Air India",
-    instructions=open("./utils/system-instructions.txt", "r").read(),
+    # instructions=open("./utils/system-instructions.txt", "r").read(),
     tools=get_tools([
         year_over_year,
         table,
