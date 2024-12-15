@@ -198,12 +198,26 @@ def table(sql_query: str, column_names: str, thread_from_previous_page : str = N
     # db_credentials = request.session['db_credentials']
     if thread_from_previous_page != None :
         sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        # Read the connection details from batman.txt
+        with open('./batman.txt', 'r') as file:
+            config = {}
+            for line in file:
+                key, value = line.strip().split("=")
+                config[key] = value.strip('"')
+
+        # Use the connection details to establish a connection
         connection = mysql.connector.connect(
-            host="sql7.freemysqlhosting.net",
-            user="sql7748185",
-            password="bbtqvgiWqw",
-            database="sql7748185"
+            host=config["host"],
+            user=config["user"],
+            password=config["password"],
+            database=config["database"]
         )
+        # connection = mysql.connector.connect(
+        #     host="sql7.freemysqlhosting.net",
+        #     user="sql7748185",
+        #     password="bbtqvgiWqw",
+        #     database="sql7748185"
+        # )
         cursor = connection.cursor()
         query = sql_query
         # query = "WITH top_cart AS ( SELECT * FROM cart ) SELECT * FROM top_cart LIMIT 5;"
@@ -253,12 +267,25 @@ def query(sql_query: str,thread_from_previous_page :str=None):
     if thread_from_previous_page != None :
             
         sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        with open('./batman.txt', 'r') as file:
+            config = {}
+            for line in file:
+                key, value = line.strip().split("=")
+                config[key] = value.strip('"')
+
+        # Use the connection details to establish a connection
         connection = mysql.connector.connect(
-            host="sql7.freemysqlhosting.net",
-            user="sql7748185",
-            password="bbtqvgiWqw",
-            database="sql7748185"
+            host=config["host"],
+            user=config["user"],
+            password=config["password"],
+            database=config["database"]
         )
+        # connection = mysql.connector.connect(
+        #     host="sql7.freemysqlhosting.net",
+        #     user="sql7748185",
+        #     password="bbtqvgiWqw",
+        #     database="sql7748185"
+        # )
         cursor = connection.cursor()
         query = sql_query
         # query = "WITH top_cart AS ( SELECT * FROM cart ) SELECT * FROM top_cart LIMIT 5;"
@@ -314,12 +341,25 @@ def table_and_chat(sql_query: str, column_names: str, thread_from_previous_page=
     # SQL Query to get data (Table generation)
     if thread_from_previous_page is not None:
         sql_query = sql_query.replace("\\n", "\n").replace("\\", "")
+        with open('./batman.txt', 'r') as file:
+            config = {}
+            for line in file:
+                key, value = line.strip().split("=")
+                config[key] = value.strip('"')
+
+        # Use the connection details to establish a connection
         connection = mysql.connector.connect(
-            host="sql7.freemysqlhosting.net",
-            user="sql7748185",
-            password="bbtqvgiWqw",
-            database="sql7748185"
+            host=config["host"],
+            user=config["user"],
+            password=config["password"],
+            database=config["database"]
         )
+        # connection = mysql.connector.connect(
+        #     host="sql7.freemysqlhosting.net",
+        #     user="sql7748185",
+        #     password="bbtqvgiWqw",
+        #     database="sql7748185"
+        # )
         cursor = connection.cursor()
         cursor.execute(sql_query)
         result = cursor.fetchall()

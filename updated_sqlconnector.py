@@ -358,9 +358,18 @@ def connect_to_databaseup(request):
                 host=host_name,
                 user=user_name,
                 password=user_password,
-                database=db_name
+                database=db_name,
+                port="20609",
+                # ssl_disabled = "REQUIRED",
             )
+# Write the credentials to batman.txt in the specified format
+            with open('./batman.txt', 'w') as file:
+                file.write(f'host="{host_name}"\n')
+                file.write(f'user="{user_name}"\n')
+                file.write(f'password="{user_password}"\n')
+                file.write(f'database="{db_name}"\n')
 
+            print("Database credentials stored in batman.txt!")
             if connection.is_connected():
                 request.session['db_credentials'] = {
                     'host': host_name,
