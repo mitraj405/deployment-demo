@@ -220,14 +220,15 @@ def chat_view():
             # Parse the JSON body of the request
             data = request.get_json()
             user_message = data.get('message', '')
-
+            thread_from_previous_page = data.get('thread_from_previous_page','')
+            assistant_from_previous_page = data.get('assistant_from_previous_page','')
             if not user_message:
                 return jsonify({'status': 'error', 'message': 'Message is required!'}), 400
 
             print("USER MESSAGE:", user_message)
 
             # Call your existing send_message function
-            message_type, usage_data, response = send_message(user_message)
+            message_type, usage_data, response = send_message(user_message,thread_from_previous_page,assistant_from_previous_page)
 
             # If the message type is 'chart', convert the response to JSON
             if message_type == 'chart':

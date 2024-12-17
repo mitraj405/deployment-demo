@@ -3,6 +3,7 @@ Tables and their Schemabatman:
 
 Table: cart
 Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
 cart_id              varchar(255)         YES        None       None       None      
 customer_id          varchar(255)         YES        None       None       None      
 product_id           varchar(255)         YES        None       None       None      
@@ -11,6 +12,7 @@ added_date           varchar(255)         YES        None       None       None
 
 Table: customers
 Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
 customer_id          varchar(255)         YES        None       None       None      
 name                 varchar(255)         YES        None       None       None      
 email                varchar(255)         YES        None       None       None      
@@ -20,12 +22,33 @@ created_at           varchar(255)         YES        None       None       None
 
 Table: inventory
 Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
 product_id           varchar(255)         YES        None       None       None      
 stock_quantity       varchar(255)         YES        None       None       None      
 last_updated         varchar(255)         YES        None       None       None      
 
+Table: order_items
+Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
+order_item_id        varchar(255)         YES        None       None       None      
+order_id             varchar(255)         YES        None       None       None      
+product_id           varchar(255)         YES        None       None       None      
+quantity             varchar(255)         YES        None       None       None      
+price                varchar(255)         YES        None       None       None      
+total_price          varchar(255)         YES        None       None       None      
+
+Table: products
+Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
+product_id           varchar(255)         YES        None       None       None      
+name                 varchar(255)         YES        None       None       None      
+category             varchar(255)         YES        None       None       None      
+price                varchar(255)         YES        None       None       None      
+stock_quantity       varchar(255)         YES        None       None       None      
+
 Table: reviews
 Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
 review_id            varchar(255)         YES        None       None       None      
 customer_id          varchar(255)         YES        None       None       None      
 product_id           varchar(255)         YES        None       None       None      

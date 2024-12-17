@@ -356,6 +356,8 @@ def connect_to_databaseup():
             user_name = data.get('username')
             user_password = data.get('password')
             db_name = data.get('dbname', None)
+            port = data.get('port',"3306")
+
             thread_id = data.get('thread_id', None)  # Check if a thread_id is passed
             multiple_queries = data.get('multiple_queries', False)  # Whether to send multiple queries in the same session
 
@@ -367,13 +369,21 @@ def connect_to_databaseup():
                 host=host_name,
                 user=user_name,
                 password=user_password,
-                database=db_name
+                database=db_name,
+                port = port
             )
+            with open('./batman.txt', 'w') as file:
+                file.write(f'host="{host_name}"\n')
+                file.write(f'user="{user_name}"\n')
+                file.write(f'password="{user_password}"\n')
+                file.write(f'database="{db_name}"\n')
+                file.write(f'port="{port}"\n')
 
+            print("Database credentials stored in batman.txt!")
             if connection.is_connected():
                 # request.session['db_credentials'] = {
                 #     'host': host_name,
-                #     'username': user_name,
+                #     'username': user_name,        
                 #     'password': user_password,
                 #     'database': db_name
                 # }

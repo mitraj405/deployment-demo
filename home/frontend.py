@@ -7,7 +7,9 @@ FLASK_BACKEND_URL = 'http://localhost:5000/chat'
 def send_message_to_backend(user_message):
     # Prepare the payload to send as JSON
     payload = {
-        'message': user_message
+        'message': user_message,
+        'thread_from_previous_page': "thread_7X0qQlaUbwLG4EIv2AyKcRxk",
+        'assistant_from_previous_page':"asst_pduWZSvfuylIRYvlQSVFXOxr"
     }
     
     # Send the POST request to the Flask backend

@@ -9,7 +9,8 @@ def send_db_connection_request(hostname, username, password, dbname):
         'hostname': hostname,
         'username': username,
         'password': password,
-        'dbname': dbname
+        'dbname': dbname,
+        'port': port
     }
     
     # Send the POST request to the Flask backend
@@ -23,9 +24,9 @@ def send_db_connection_request(hostname, username, password, dbname):
 
 if __name__ == "__main__":
     # Example of sending database connection details
-    hostname = "sql12.freemysqlhosting.net"
-    username = "sql12750055"
-    password = "UCvwmCeUp4"
-    dbname = "sql12750055"
-    
+    hostname="mysql-3562afe5-bawsny-169c.e.aivencloud.com"
+    username="avnadmin"
+    password="AVNS_BsudL5xLd8oWrMb8Bzf"
+    dbname="defaultdb"
+    port = "20609"
     send_db_connection_request(hostname, username, password, dbname)

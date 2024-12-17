@@ -1,4 +1,5 @@
-host="mysql-3562afe5-bawsny-169c.e.aivencloud.com",
-user="avnadmin",
-password="AVNS_BsudL5xLd8oWrMb8Bzf",
+host="mysql-3562afe5-bawsny-169c.e.aivencloud.com"
+user="avnadmin"
+password="AVNS_BsudL5xLd8oWrMb8Bzf"
 database="defaultdb"
+port="20609"

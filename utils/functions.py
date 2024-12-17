@@ -209,7 +209,8 @@ def table(sql_query: str, column_names: str, thread_from_previous_page : str = N
             host=config["host"],
             user=config["user"],
             password=config["password"],
-            database=config["database"]
+            database=config["database"],
+            port  = config["port"]
         )
         # connection = mysql.connector.connect(
         #     host="sql7.freemysqlhosting.net",
@@ -277,7 +278,8 @@ def query(sql_query: str,thread_from_previous_page :str=None):
             host=config["host"],
             user=config["user"],
             password=config["password"],
-            database=config["database"]
+            database=config["database"],
+            port  = config["port"]
         )
         # connection = mysql.connector.connect(
         #     host="sql7.freemysqlhosting.net",
@@ -351,7 +353,8 @@ def table_and_chat(sql_query: str, column_names: str, thread_from_previous_page=
             host=config["host"],
             user=config["user"],
             password=config["password"],
-            database=config["database"]
+            database=config["database"],
+            port  = config["port"]
         )
         # connection = mysql.connector.connect(
         #     host="sql7.freemysqlhosting.net",
