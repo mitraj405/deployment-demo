@@ -93,7 +93,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
         output = None
         if run.status!="failed":
             while run.status != "completed":
-                if run.stats == "failed":
+                if run.status == "failed":
                     return
                 if run.status == "requires_action":
                     tool_outputs = list()

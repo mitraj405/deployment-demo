@@ -15,8 +15,10 @@ import traceback
 import mysql.connector
 from mysql.connector import Error
 
+
 def send_message(message,thread_from_previous_page=None,assistant_from_previous_page=None):
-    type = ""
+    global type
+    type =  "chat"
     MODEL="gpt-4o"
     os.environ['OPENAI_API_KEY']='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'
     client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
@@ -105,7 +107,9 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                         shown = False
 
                         if tool.function.name == "create_chart":
-                            type = "create_chart"
+                            # global type
+                            # global type
+                            type =  "create_chart"
                             output_str = "Chart created."
                             task_list.append("Creating chart...")
 
@@ -115,11 +119,11 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                                 x_label=args["x_label"],
                                 y_label=args["y_label"],
                                 secondary_y_label=args.get("secondary_y_label", None),
-                                
                             )
 
                             created = True
                         elif tool.function.name == "table_and_chat":
+                            # global type  # Declare the variable as global at the beginning of the scope
                             type = "table_and_chat"
                             print("table and chart")
                             result = table_and_chat(
@@ -127,7 +131,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                                     column_names=args["column_names"],
                             )
                         elif tool.function.name == "line":
-                            type = "line"
+                            # global type
+                            type =  "line"
                             print(
                                 f"line(sql_query={args['sql_query']}, x_dim={args['x_dim']}, y_dim={args['y_dim']}, name={args['name']}, secondary_y={args['secondary_y']})"
                             )
@@ -148,7 +153,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             secondary_ys.append(args["secondary_y"])
                             task_list.append("Adding line...")
                         elif tool.function.name == "bar":
-                            type = "bar"
+                            # global type
+                            type =  "bar"
                             print(
                                 f"bar(\n  sql_query={args['sql_query']},\n  x_dim={args['x_dim']},\n  y_dim={args['y_dim']},\n  name={args['name']},\n  secondary_y={args['secondary_y']}\n)"
                             )
@@ -191,7 +197,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             task_list.append("Adding line...")
                             task_list.append("Adding line...")
                         elif tool.function.name == "histogram":
-                            type = "histogram"
+                            # global type
+                            type =  "histogram"
                             print(
                                 f"histogram({args['sql_query']}, {args['x_dim']}, {args['bins']}, {args['name']}, {args['secondary_y']})"
                             )
@@ -212,7 +219,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             secondary_ys.append(args["secondary_y"])
                             task_list.append("Adding histogram...")
                         elif tool.function.name == "show_chart":
-                            type = "show_chart"
+                            
                             print(f"show_chart(message={args['message']})")
                             output_str = "Chart shown."
                             shown = True
@@ -222,7 +229,7 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
 
                             task_list.append("Done!")
 
-                            output = "chart", usage_data, figure
+                            output = "chart", usage_data, figure , type
                         elif tool.function.name == "live_fare_data":
                             print(
                                 f"live_fare_data(origin={args['origin']}, orig_country={args['orig_country']}, destination={args['destination']}, dest_country={args['dest_country']}, date_mentioned={args['date_mentioned']}, flight_day={args['flight_day']}, flight_month={args['flight_month']}, flight_year={args['flight_year']}, round_trip={args.get('round_trip', False)}, round_trip_length={args.get('round_trip_length', 21)}, display_table={args.get('display_table', True)}, sort_by={args.get('sort_by', 'None')}, ascending={args.get('ascending', True)}, cabin={args.get('cabin', 'Y')}, filter_airline={args.get('filter_airline', '')}, filter_num_stops={args.get('filter_num_stops', -1)}, min_price_range={args.get('min_price_range', -1)}, max_price_range={args.get('max_price_range', -1)})"
@@ -292,7 +299,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             task_list.append("Analyzing data...")
                             output_str = "List the following flights:\n" + "\n".join(result)
                         elif tool.function.name == "table":
-                            type = "table"
+                            # global type
+                            # type =  "table"
                             print(
                                 f"table(sql_query={args['sql_query']}, column_names={args['column_names']},thread_from_previous_page)"
                             )
@@ -310,7 +318,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             
                             )
                         elif tool.function.name == "query":
-                            type = "query"
+                            # global type
+                            type =  "query"
                             task_list.append("Querying database...")
                             print(f"query(sql_query={args['sql_query']})")
 
@@ -323,7 +332,8 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
                             task_list.append("Analyzing data...")
                             output_str = result.to_string()
                         else:
-                            type = "unknown"
+                            # global type
+                            type =  "unknown"
                             print(f"Unknown function: {tool.function.name}")
 
                         tool_outputs.append(
