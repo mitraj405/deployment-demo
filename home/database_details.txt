@@ -37,6 +37,15 @@ quantity             varchar(255)         YES        None       None       None
 price                varchar(255)         YES        None       None       None      
 total_price          varchar(255)         YES        None       None       None      
 
+Table: orders
+Column               Type                 Null       Key        Default    Extra     
+id                   int                  NO         PRI        None       auto_increment
+order_id             varchar(255)         YES        None       None       None      
+customer_id          varchar(255)         YES        None       None       None      
+order_date           varchar(255)         YES        None       None       None      
+total_amount         varchar(255)         YES        None       None       None      
+status               varchar(255)         YES        None       None       None      
+
 Table: products
 Column               Type                 Null       Key        Default    Extra     
 id                   int                  NO         PRI        None       auto_increment

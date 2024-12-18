@@ -8,8 +8,8 @@ def send_message_to_backend(user_message):
     # Prepare the payload to send as JSON
     payload = {
         'message': user_message,
-        'thread_from_previous_page': "thread_7X0qQlaUbwLG4EIv2AyKcRxk",
-        'assistant_from_previous_page':"asst_pduWZSvfuylIRYvlQSVFXOxr"
+        'thread_from_previous_page': "thread_h1tAcL1o2VVfpWwyWbppIfmd",
+        'assistant_from_previous_page':"asst_x3UrXUedieAYEQAHdas5Gwc2"
     }
     
     # Send the POST request to the Flask backend
