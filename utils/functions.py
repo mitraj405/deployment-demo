@@ -316,7 +316,7 @@ def query(sql_query: str,thread_from_previous_page :str=None):
         cursor.close()
         sqliteConnection.close()
         return record
-
+#HERE USE TRY AND CATCH so that if query fail , in catch we can have proper reply, so that after that we can tell response is wrong
 
 
 

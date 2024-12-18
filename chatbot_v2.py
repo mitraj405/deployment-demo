@@ -91,254 +91,257 @@ def send_message(message,thread_from_previous_page=None,assistant_from_previous_
         )
 
         output = None
-        while run.status != "completed":
-            if run.status == "requires_action":
-                tool_outputs = list()
-                for tool in run.required_action.submit_tool_outputs.tool_calls:
-                    args = json.loads(tool.function.arguments)
-                    output_str = ""
-                    created = False
-                    plotted = False
-                    shown = False
+        if run.status!="failed":
+            while run.status != "completed":
+                if run.stats == "failed":
+                    return
+                if run.status == "requires_action":
+                    tool_outputs = list()
+                    for tool in run.required_action.submit_tool_outputs.tool_calls:
+                        args = json.loads(tool.function.arguments)
+                        output_str = ""
+                        created = False
+                        plotted = False
+                        shown = False
 
-                    if tool.function.name == "create_chart":
-                        output_str = "Chart created."
-                        task_list.append("Creating chart...")
+                        if tool.function.name == "create_chart":
+                            output_str = "Chart created."
+                            task_list.append("Creating chart...")
 
-                        # global figure, traces
-                        figure, traces = create_chart(
-                            title=args["title"],
-                            x_label=args["x_label"],
-                            y_label=args["y_label"],
-                            secondary_y_label=args.get("secondary_y_label", None),
-                            
-                        )
+                            # global figure, traces
+                            figure, traces = create_chart(
+                                title=args["title"],
+                                x_label=args["x_label"],
+                                y_label=args["y_label"],
+                                secondary_y_label=args.get("secondary_y_label", None),
+                                
+                            )
 
-                        created = True
-                    elif tool.function.name == "table_and_chat":
-                        print("table and chart")
-                        result = table_and_chat(
+                            created = True
+                        elif tool.function.name == "table_and_chat":
+                            print("table and chart")
+                            result = table_and_chat(
+                                    sql_query=args["sql_query"],
+                                    column_names=args["column_names"],
+                            )
+                        elif tool.function.name == "line":
+                            print(
+                                f"line(sql_query={args['sql_query']}, x_dim={args['x_dim']}, y_dim={args['y_dim']}, name={args['name']}, secondary_y={args['secondary_y']})"
+                            )
+                            output_str = "Line added to chart."
+                            plotted = True
+
+                            result = line(
                                 sql_query=args["sql_query"],
-                                column_names=args["column_names"],
-                        )
-                    elif tool.function.name == "line":
-                        print(
-                            f"line(sql_query={args['sql_query']}, x_dim={args['x_dim']}, y_dim={args['y_dim']}, name={args['name']}, secondary_y={args['secondary_y']})"
-                        )
-                        output_str = "Line added to chart."
-                        plotted = True
+                                x_dim=args["x_dim"],
+                                y_dim=args["y_dim"],
+                                name=args["name"],
+                                secondary_y=args["secondary_y"],
+                                    thread_from_previous_page = thread_from_previous_page
+                                
+                            )
 
-                        result = line(
-                            sql_query=args["sql_query"],
-                            x_dim=args["x_dim"],
-                            y_dim=args["y_dim"],
-                            name=args["name"],
-                            secondary_y=args["secondary_y"],
-                                thread_from_previous_page = thread_from_previous_page
-                            
-                        )
+                            traces.append(result)
+                            secondary_ys.append(args["secondary_y"])
+                            task_list.append("Adding line...")
+                        elif tool.function.name == "bar":
+                            print(
+                                f"bar(\n  sql_query={args['sql_query']},\n  x_dim={args['x_dim']},\n  y_dim={args['y_dim']},\n  name={args['name']},\n  secondary_y={args['secondary_y']}\n)"
+                            )
+                            output_str = "Bar added to chart."
+                            plotted = True
 
-                        traces.append(result)
-                        secondary_ys.append(args["secondary_y"])
-                        task_list.append("Adding line...")
-                    elif tool.function.name == "bar":
-                        print(
-                            f"bar(\n  sql_query={args['sql_query']},\n  x_dim={args['x_dim']},\n  y_dim={args['y_dim']},\n  name={args['name']},\n  secondary_y={args['secondary_y']}\n)"
-                        )
-                        output_str = "Bar added to chart."
-                        plotted = True
+                            result = bar(
+                                sql_query=args["sql_query"],
+                                x_dim=args["x_dim"],
+                                y_dim=args["y_dim"],
+                                name=args["name"],
+                                secondary_y=args["secondary_y"],
+                                    thread_from_previous_page = thread_from_previous_page
 
-                        result = bar(
-                            sql_query=args["sql_query"],
-                            x_dim=args["x_dim"],
-                            y_dim=args["y_dim"],
-                            name=args["name"],
-                            secondary_y=args["secondary_y"],
-                                thread_from_previous_page = thread_from_previous_page
+                            )
 
-                        )
+                            traces.append(result)
+                            secondary_ys.append(args["secondary_y"])
+                            task_list.append("Adding bar...")
+                        elif tool.function.name == "year_over_year":
+                            print(
+                                f"year_over_year(expression={args['expression']}, name={args['name']}, secondary_y={args['secondary_y']}, frequency={args.get('frequency', 'daily')}, start_date={args.get('start_date', '')}, end_date={args.get('end_date', '')}, filter_criteria={args.get('filter_criteria', '')})"
+                            )
+                            output_str = "Year comparison lines added to chart."
+                            plotted = True
 
-                        traces.append(result)
-                        secondary_ys.append(args["secondary_y"])
-                        task_list.append("Adding bar...")
-                    elif tool.function.name == "year_over_year":
-                        print(
-                            f"year_over_year(expression={args['expression']}, name={args['name']}, secondary_y={args['secondary_y']}, frequency={args.get('frequency', 'daily')}, start_date={args.get('start_date', '')}, end_date={args.get('end_date', '')}, filter_criteria={args.get('filter_criteria', '')})"
-                        )
-                        output_str = "Year comparison lines added to chart."
-                        plotted = True
+                            result = year_over_year(
+                                expression=args["expression"],
+                                name=args["name"],
+                                secondary_y=args["secondary_y"],
+                                frequency=args.get("frequency", "daily"),
+                                start_date=args.get("start_date", ""),
+                                end_date=args.get("end_date", ""),
+                                filter_criteria=args.get("filter_criteria", ""),
+                            )
 
-                        result = year_over_year(
-                            expression=args["expression"],
-                            name=args["name"],
-                            secondary_y=args["secondary_y"],
-                            frequency=args.get("frequency", "daily"),
-                            start_date=args.get("start_date", ""),
-                            end_date=args.get("end_date", ""),
-                            filter_criteria=args.get("filter_criteria", ""),
-                        )
+                            traces.append(result[0])
+                            traces.append(result[1])
+                            secondary_ys.append(args["secondary_y"])
+                            task_list.append("Adding line...")
+                            task_list.append("Adding line...")
+                        elif tool.function.name == "histogram":
+                            print(
+                                f"histogram({args['sql_query']}, {args['x_dim']}, {args['bins']}, {args['name']}, {args['secondary_y']})"
+                            )
+                            output_str = "Histogram added to chart."
+                            plotted = True
 
-                        traces.append(result[0])
-                        traces.append(result[1])
-                        secondary_ys.append(args["secondary_y"])
-                        task_list.append("Adding line...")
-                        task_list.append("Adding line...")
-                    elif tool.function.name == "histogram":
-                        print(
-                            f"histogram({args['sql_query']}, {args['x_dim']}, {args['bins']}, {args['name']}, {args['secondary_y']})"
-                        )
-                        output_str = "Histogram added to chart."
-                        plotted = True
+                            result = histogram(
+                                sql_query=args["sql_query"],
+                                x_dim=args["x_dim"],
+                                name=args["name"],
+                                bins=args["bins"],
+                                secondary_y=args["secondary_y"],
+                                    thread_from_previous_page = thread_from_previous_page
 
-                        result = histogram(
-                            sql_query=args["sql_query"],
-                            x_dim=args["x_dim"],
-                            name=args["name"],
-                            bins=args["bins"],
-                            secondary_y=args["secondary_y"],
-                                thread_from_previous_page = thread_from_previous_page
+                            )
 
-                        )
+                            traces.append(result)
+                            secondary_ys.append(args["secondary_y"])
+                            task_list.append("Adding histogram...")
+                        elif tool.function.name == "show_chart":
+                            print(f"show_chart(message={args['message']})")
+                            output_str = "Chart shown."
+                            shown = True
 
-                        traces.append(result)
-                        secondary_ys.append(args["secondary_y"])
-                        task_list.append("Adding histogram...")
-                    elif tool.function.name == "show_chart":
-                        print(f"show_chart(message={args['message']})")
-                        output_str = "Chart shown."
-                        shown = True
+                            figure.add_traces(traces, secondary_ys=secondary_ys)
+                            figure.update_layout(barmode="group")
 
-                        figure.add_traces(traces, secondary_ys=secondary_ys)
-                        figure.update_layout(barmode="group")
+                            task_list.append("Done!")
 
-                        task_list.append("Done!")
+                            output = "chart", usage_data, figure
+                        elif tool.function.name == "live_fare_data":
+                            print(
+                                f"live_fare_data(origin={args['origin']}, orig_country={args['orig_country']}, destination={args['destination']}, dest_country={args['dest_country']}, date_mentioned={args['date_mentioned']}, flight_day={args['flight_day']}, flight_month={args['flight_month']}, flight_year={args['flight_year']}, round_trip={args.get('round_trip', False)}, round_trip_length={args.get('round_trip_length', 21)}, display_table={args.get('display_table', True)}, sort_by={args.get('sort_by', 'None')}, ascending={args.get('ascending', True)}, cabin={args.get('cabin', 'Y')}, filter_airline={args.get('filter_airline', '')}, filter_num_stops={args.get('filter_num_stops', -1)}, min_price_range={args.get('min_price_range', -1)}, max_price_range={args.get('max_price_range', -1)})"
+                            )
+                            output_str = "Fetching live data..."
+                            task_list.append("Fetching live data...")
 
-                        output = "chart", usage_data, figure
-                    elif tool.function.name == "live_fare_data":
-                        print(
-                            f"live_fare_data(origin={args['origin']}, orig_country={args['orig_country']}, destination={args['destination']}, dest_country={args['dest_country']}, date_mentioned={args['date_mentioned']}, flight_day={args['flight_day']}, flight_month={args['flight_month']}, flight_year={args['flight_year']}, round_trip={args.get('round_trip', False)}, round_trip_length={args.get('round_trip_length', 21)}, display_table={args.get('display_table', True)}, sort_by={args.get('sort_by', 'None')}, ascending={args.get('ascending', True)}, cabin={args.get('cabin', 'Y')}, filter_airline={args.get('filter_airline', '')}, filter_num_stops={args.get('filter_num_stops', -1)}, min_price_range={args.get('min_price_range', -1)}, max_price_range={args.get('max_price_range', -1)})"
-                        )
-                        output_str = "Fetching live data..."
-                        task_list.append("Fetching live data...")
+                            if not args["date_mentioned"]:
+                                args["flight_day"] = datetime.now().day
+                                args["flight_month"] = datetime.now().month
+                                args["flight_year"] = datetime.now().year
 
-                        if not args["date_mentioned"]:
-                            args["flight_day"] = datetime.now().day
-                            args["flight_month"] = datetime.now().month
-                            args["flight_year"] = datetime.now().year
+                            flight_date = datetime(
+                                day=int(args["flight_day"]),
+                                month=int(args["flight_month"]),
+                                year=int(args["flight_year"]),
+                                hour=23,
+                                minute=59,
+                                second=59,
+                            )
 
-                        flight_date = datetime(
-                            day=int(args["flight_day"]),
-                            month=int(args["flight_month"]),
-                            year=int(args["flight_year"]),
-                            hour=23,
-                            minute=59,
-                            second=59,
-                        )
+                            if (
+                                args["orig_country"] == "IN"
+                                and args["dest_country"] == "IN"
+                                and args.get("round_trip", False)
+                                or args["orig_country"] == "India"
+                                and args["dest_country"] == "India"
+                                and args.get("round_trip", False)
+                            ):
+                                task_list.append("Error...")
+                                output_str = "You cannot get round trip live fares for domestic flights."
 
-                        if (
-                            args["orig_country"] == "IN"
-                            and args["dest_country"] == "IN"
-                            and args.get("round_trip", False)
-                            or args["orig_country"] == "India"
-                            and args["dest_country"] == "India"
-                            and args.get("round_trip", False)
-                        ):
-                            task_list.append("Error...")
-                            output_str = "You cannot get round trip live fares for domestic flights."
+                            if datetime.now() > flight_date:
+                                task_list.append("Need more information...")
+                                output_str = f"Incorrect flight date. The provided date must be on or after today, {datetime.now().strftime('%b %-d, %Y')}. Use the current date and user's information."
 
-                        if datetime.now() > flight_date:
-                            task_list.append("Need more information...")
-                            output_str = f"Incorrect flight date. The provided date must be on or after today, {datetime.now().strftime('%b %-d, %Y')}. Use the current date and user's information."
+                            task_list.append("Fetching live data...")
 
-                        task_list.append("Fetching live data...")
+                            result = live_fare_data(
+                                origin=args["origin"],
+                                orig_country=args["orig_country"],
+                                destination=args["destination"],
+                                dest_country=args["dest_country"],
+                                flight_day=args["flight_day"],
+                                flight_month=args["flight_month"],
+                                flight_year=args["flight_year"],
+                                date_mentioned=args["date_mentioned"],
+                                display_table=args.get("display_table", True),
+                                sort_by=args.get("sort_by", "None"),
+                                ascending=args.get("ascending", True),
+                                cabin=args.get("cabin", "Y"),
+                                filter_airline=args.get("filter_airline", ""),
+                                filter_num_stops=args.get("filter_num_stops", -1),
+                                min_price_range=args.get("min_price_range", -1),
+                                max_price_range=args.get("max_price_range", -1),
+                                round_trip=args.get("round_trip", False),
+                                round_trip_length=args.get("round_trip_length", 21),
+                            )
+                            print('done scrapping', result)
+                            if not isinstance(result, list) and result.empty:
+                                output_str = "No flights found for the given criteria."
 
-                        result = live_fare_data(
-                            origin=args["origin"],
-                            orig_country=args["orig_country"],
-                            destination=args["destination"],
-                            dest_country=args["dest_country"],
-                            flight_day=args["flight_day"],
-                            flight_month=args["flight_month"],
-                            flight_year=args["flight_year"],
-                            date_mentioned=args["date_mentioned"],
-                            display_table=args.get("display_table", True),
-                            sort_by=args.get("sort_by", "None"),
-                            ascending=args.get("ascending", True),
-                            cabin=args.get("cabin", "Y"),
-                            filter_airline=args.get("filter_airline", ""),
-                            filter_num_stops=args.get("filter_num_stops", -1),
-                            min_price_range=args.get("min_price_range", -1),
-                            max_price_range=args.get("max_price_range", -1),
-                            round_trip=args.get("round_trip", False),
-                            round_trip_length=args.get("round_trip_length", 21),
-                        )
-                        print('done scrapping', result)
-                        if not isinstance(result, list) and result.empty:
-                            output_str = "No flights found for the given criteria."
+                            if args.get("display_table", True):
+                                task_list.append("Creating table...")
+                                output = "query", usage_data, result
 
-                        if args.get("display_table", True):
+                            task_list.append("Analyzing data...")
+                            output_str = "List the following flights:\n" + "\n".join(result)
+                        elif tool.function.name == "table":
+                            print(
+                                f"table(sql_query={args['sql_query']}, column_names={args['column_names']},thread_from_previous_page)"
+                            )
+                            output_str = "Table created."
                             task_list.append("Creating table...")
-                            output = "query", usage_data, result
-
-                        task_list.append("Analyzing data...")
-                        output_str = "List the following flights:\n" + "\n".join(result)
-                    elif tool.function.name == "table":
-                        print(
-                            f"table(sql_query={args['sql_query']}, column_names={args['column_names']},thread_from_previous_page)"
-                        )
-                        output_str = "Table created."
-                        task_list.append("Creating table...")
-                        output = (
-                            "query",
-                            usage_data,
-                            table(
-                                sql_query=args["sql_query"],
-                                column_names=args["column_names"],
-                                thread_from_previous_page = thread_from_previous_page
-                            ),
-                           
-                        )
-                    elif tool.function.name == "query":
-                        task_list.append("Querying database...")
-                        print(f"query(sql_query={args['sql_query']})")
-
-                        result = query(
+                            output = (
+                                "query",
+                                usage_data,
+                                table(
+                                    sql_query=args["sql_query"],
+                                    column_names=args["column_names"],
+                                    thread_from_previous_page = thread_from_previous_page
+                                ),
                             
-                            sql_query=args["sql_query"],
-                            thread_from_previous_page= thread_from_previous_page
-                        )
+                            )
+                        elif tool.function.name == "query":
+                            task_list.append("Querying database...")
+                            print(f"query(sql_query={args['sql_query']})")
 
-                        task_list.append("Analyzing data...")
-                        output_str = result.to_string()
-                    else:
-                        print(f"Unknown function: {tool.function.name}")
+                            result = query(
+                                
+                                sql_query=args["sql_query"],
+                                thread_from_previous_page= thread_from_previous_page
+                            )
 
-                    tool_outputs.append(
-                        {
-                            "tool_call_id": tool.id,
-                            "output": output_str,
-                        }
-                    )
-                if created and not shown:
-                    for to in tool_outputs:
-                        to["output"] = (
-                            "ERROR: You must call every function in parallel, including create_chart and show_chart. Try again."
-                        )
-                elif created and shown and not plotted:
-                    for to in tool_outputs:
-                        to["output"] = (
-                            "ERROR: You have plotted an empty chart. Try again."
-                        )
+                            task_list.append("Analyzing data...")
+                            output_str = result.to_string()
+                        else:
+                            print(f"Unknown function: {tool.function.name}")
 
-                try:
-                    run = client.beta.threads.runs.submit_tool_outputs_and_poll(
-                        thread_id=thread.id,
-                        run_id=run.id,
-                        tool_outputs=tool_outputs,
-                    )
-                    print("Tool outputs submitted successfully.")
-                except Exception as e:
-                    print("Failed to submit tool outputs:", e)
+                        tool_outputs.append(
+                            {
+                                "tool_call_id": tool.id,
+                                "output": output_str,
+                            }
+                        )
+                    if created and not shown:
+                        for to in tool_outputs:
+                            to["output"] = (
+                                "ERROR: You must call every function in parallel, including create_chart and show_chart. Try again."
+                            )
+                    elif created and shown and not plotted:
+                        for to in tool_outputs:
+                            to["output"] = (
+                                "ERROR: You have plotted an empty chart. Try again."
+                            )
+
+                    try:
+                        run = client.beta.threads.runs.submit_tool_outputs_and_poll(
+                            thread_id=thread.id,
+                            run_id=run.id,
+                            tool_outputs=tool_outputs,
+                        )
+                        print("Tool outputs submitted successfully.")
+                    except Exception as e:
+                        print("Failed to submit tool outputs:", e)
 
         if output is None:
             messages = client.beta.threads.messages.list(thread_id=thread.id)

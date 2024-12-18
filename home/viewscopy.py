@@ -226,9 +226,9 @@ def chat_view():
                 return jsonify({'status': 'error', 'message': 'Message is required!'}), 400
 
             print("USER MESSAGE:", user_message)
-
+            type = ""
             # Call your existing send_message function
-            message_type, usage_data, response = send_message(user_message,thread_from_previous_page,assistant_from_previous_page)
+            message_type, usage_data, response, type = send_message(user_message,thread_from_previous_page,assistant_from_previous_page)
 
             # If the message type is 'chart', convert the response to JSON
             if message_type == 'chart':
@@ -240,7 +240,8 @@ def chat_view():
             return jsonify({
                 'response': response,
                 'message_type': message_type,
-                'usage_data': usage_data
+                'usage_data': usage_data,
+                'type' :type
             })
 
         except Exception as e:

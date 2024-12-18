@@ -229,7 +229,7 @@ def table(sql_query: str, column_names: str, thread_from_previous_page : str = N
         # sqliteConnection = sqlitecloud.connect("sqlitecloud://ctqws9lknk.sqlite.cloud:8860/db.sqlite?apikey=1TBBTbRsWbzMtiEoz7MA2VQ7b0TL6JD2ZJysGFXiXpI")
         # cursor = sqliteConnection.cursor
         # cursor.execute(sql_query)
-        print(result)
+        print("result",result)
 
         record = pd.DataFrame(result, columns=column_names)
 
