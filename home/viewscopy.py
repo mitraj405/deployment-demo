@@ -118,7 +118,7 @@ from mysql.connector import Error
 from flask import Flask, request, jsonify
 import plotly.io as pio
 from chatbot_v2 import send_message  # Assuming this function exists in your project
-
+from flask_cors import CORS
 
 # app = Flask(__name__)
 
@@ -212,7 +212,7 @@ import plotly.io as pio
 from chatbot_v2 import send_message  # Assuming this function exists in your project
 
 app = Flask(__name__)
-
+CORS(app)
 @app.route('/chat', methods=['POST'])
 def chat_view():
     if request.method == 'POST':
@@ -250,4 +250,4 @@ def chat_view():
     return jsonify({'status': 'error', 'message': 'Invalid request method.'}), 405
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)  # Start Flask app on localhost
+    app.run(debug=True, port=5001)  # Start Flask app on localhost
