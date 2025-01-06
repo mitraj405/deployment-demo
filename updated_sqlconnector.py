@@ -347,7 +347,7 @@ def connect_to_databaseup(request):
             user_name = data.get('username')
             user_password = data.get('password')
             db_name = data.get('dbname', None)
-            port = data.get('port',"20609")
+            port = data.get('port',"3306")
             thread_id = data.get('thread_id', None)  # Check if a thread_id is passed
             multiple_queries = data.get('multiple_queries', False)  # Whether to send multiple queries in the same session
 

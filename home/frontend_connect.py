@@ -28,5 +28,5 @@ if __name__ == "__main__":
     username="avnadmin"
     password="AVNS_BsudL5xLd8oWrMb8Bzf"
     dbname="defaultdb"
-    port = "20609"
+    port = "3306"
     send_db_connection_request(hostname, username, password, dbname)
